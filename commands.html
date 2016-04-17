@@ -90,63 +90,77 @@
       </div><!--/.nav-collapse -->
     </div><!--/.container-fluid -->
   </nav>
+<div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            
+            <div class="sidebar-nav">
+              <div class="navbar navbar-default" role="navigation">
+                <div class="navbar-header">
+                  <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                  </button>
+                  <span class="visible-xs navbar-brand">Documentation</span>
+                </div>
+                <div class="navbar-collapse collapse sidebar-navbar-collapse">
+                  <ul class="nav navbar-nav">
+                    <li><a href="/installation">Installation</a></li>
+                    <li><a href="/getting-started">Getting started</a></li>
+                                        <li><a href="/droid-yml">Automating build, test and deploy<br /><i>droid.yml</i></a></li>
+                    <li><a href="/droid-inventory-yml">Remote tasks with inventories<br /><i>droid-inventory.yml</i></a></li>
+                    <li><a href="/commands">Command index</a></li>
+                    <li><a href="/terminology">Terminology</a></li>
+                  </ul>
+                </div><!--/.nav-collapse -->
+              </div>
+          </div>
+      
+        </div>
+        <div class="col-md-9">
+            
+                <h1>Command index</h1>
+    <p class="lead">
+        Below you'll find a list of all the available commands
+        in the standard distribution of Droid.
+    </p>
+    <p class="lead">
+        Click on the command-name for full description, available arguments and options, etc.
+    </p>
+    <ul>
+            <li><code><a href="commands__inventory">inventory</a></code> Show inventory configuration
+        </li>
+            <li><code><a href="commands__config">config</a></code> Show project configuration
+        </li>
+            <li><code><a href="commands__debug__echo">debug:echo</a></code> Echo a message to the console
+        </li>
+            <li><code><a href="commands__target__run">target:run</a></code> Run a target
+        </li>
+            <li><code><a href="commands__fs__mkdir">fs:mkdir</a></code> Creates a directory
+        </li>
+            <li><code><a href="commands__fs__chmod">fs:chmod</a></code> Modifies the file mode bits
+        </li>
+            <li><code><a href="commands__composer__install">composer:install</a></code> Composer install
+        </li>
+            <li><code><a href="commands__bower__install">bower:install</a></code> Bower install
+        </li>
+            <li><code><a href="commands__git__fetch">git:fetch</a></code> Fetch commits from remote
+        </li>
+            <li><code><a href="commands__git__merge">git:merge</a></code> Merge branch
+        </li>
+            <li><code><a href="commands__git__pull">git:pull</a></code> Pull (Fetch+Merge) commits from remote
+        </li>
+            <li><code><a href="commands__fixtures__load">fixtures:load</a></code> Load Alice fixture data into database
+        </li>
+            <li><code><a href="commands__schema__load">schema:load</a></code> Load Alice fixture data into database
+        </li>
+        </ul>
+        </div>
+    </div>
+</div>
 
-<!-- Header -->
-<header class="header">
-	<div class="container">
-		<div class="row">
-			<div class="col-lg-8 col-lg-push-2 text-center">
-				<h1>Droid</h1>
-				<h2>The elegant task runner for devs, ops and other lazy people</h2>
-				<p class="lead">
-					Droid will help you automate your builds, tests, deploys, background tasks, and even handle your configuration management
-				</p>
-				
-				<!-- p>Droid is based on Symfony Console commands allowing you to easily extend it's functionality</p>
-					<br>
-				</p-->
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-lg-12">
-                			</div>
-		</div>
-	</div>
-</header>
-<!-- /Header -->
-	
-
-<!-- Content -->
-<main class="content">
-
-	<!-- Lead -->
-	<section class="container space-before space-after">
-		<div class="row">
-			<div class="col-sm-10 col-sm-push-1">
-				<h1 class="text-center">What is Droid?</h1>
-				<p class="lead text-center">
-					Droid is a task-runner, similar to Gulp, Grunt, Apache Ant, Phing, etc.
-				</p> 
-				<p class="lead text-center">
-					It is built using standard Symfony Console Commands. This means
-                    you can use any existing commands to script your builds, tests and deploys.
-				</p>
-                <p class="lead text-center">
-                    Furthermore, Droid will just as happily run commands on remote hosts, or host groups,
-                    as it performs it's tasks locally. This allows you to use Droid as a Configuration
-                    Management tool, much like Ansible, Puppet or Chef. But much simpler, and easier to extend.
-                </p>
-                <center>
-                    <a href="/getting-started" class="btn btn-success btn-lg" style="color: #ffffff">Getting started</a>
-                </center>
-			</div>
-		</div>
-	</section>
-	<!-- /Lead -->
-
-
-    
-</main>
 
 <footer id="footer" class="jumbotron">
 	<section class="container">
