@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport"    content="width=device-width, initial-scale=1.0">
+	
+	<title>Droid: Task Runner for PHP</title>
+
+	<!-- Bootstrap itself -->
+	<link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+	<!-- Icons -->
+	<link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet"> 
+	<!-- Fonts -->
+	<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,700"> 
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.2.0/styles/default.min.css">
+	<!-- Custom styles -->
+	<link rel="stylesheet" href="/assets/style.css">
+    <style>
+    .header {
+        background: linear-gradient(to bottom, #405080 0%,#203040 100%) !important;
+    }
+    .navbar {
+        margin-bottom: 0px !important;
+        background-color: #203040 !important;
+        border-radius: 0px !important;
+        border: 0px none !important;
+    }
+    .navbar li a, .navbar a.navbar-brand {
+        color: #ffffff !important;
+    }
+    
+    .navbar li a.cta {
+        background-color: #80c080 !important;
+        border-radius: 5px;
+        margin-top: 9px;
+        padding: 5px;
+        color: #ffffff !important;
+    }
+    
+    /* make sidebar nav vertical */ 
+    @media (min-width: 768px) {
+      .sidebar-nav {
+          margin-top: 20px;
+          margin-bottom: 20px;
+      }
+      .sidebar-nav .navbar .navbar-collapse {
+        padding: 0;
+        max-height: none;
+      }
+      .sidebar-nav .navbar ul {
+        float: none;
+      }
+      .sidebar-nav .navbar ul:not {
+        display: block;
+      }
+      .sidebar-nav .navbar li {
+        float: none;
+        display: block;
+      }
+      .sidebar-nav .navbar li a {
+        padding-top: 12px;
+        padding-bottom: 12px;
+      }
+    }
+    </style>
+
+	<!--[if lt IE 9]> <script src="assets/js/html5shiv.js"></script> <![endif]-->
+</head>
+
+<body>
+  <!-- Static navbar -->
+  <nav class="navbar navbar-default">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="/">Droid</a>
+      </div>
+      <div id="navbar" class="navbar-collapse collapse">
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="/">Home</a></li>
+          <li><a href="/documentation">Documentation</a></li>
+          <li><a class="cta" href="/getting-started">Getting started</a></li>
+        </ul>
+      </div><!--/.nav-collapse -->
+    </div><!--/.container-fluid -->
+  </nav>
+<div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            
+            <div class="sidebar-nav">
+              <div class="navbar navbar-default" role="navigation">
+                <div class="navbar-header">
+                  <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                  </button>
+                  <span class="visible-xs navbar-brand">Documentation</span>
+                </div>
+                <div class="navbar-collapse collapse sidebar-navbar-collapse">
+                  <ul class="nav navbar-nav">
+                    <li><a href="/installation">Installation</a></li>
+                    <li><a href="/getting-started">Getting started</a></li>
+                                        <li><a href="/droid-yml">Automating build, test and deploy<br /><i>droid.yml</i></a></li>
+                    <li><a href="/droid-inventory-yml">Remote tasks with inventories<br /><i>droid-inventory.yml</i></a></li>
+                    <li><a href="/terminology">Terminology</a></li>
+                  </ul>
+                </div><!--/.nav-collapse -->
+              </div>
+          </div>
+      
+        </div>
+        <div class="col-md-9">
+            <h1>Terminology</h1>
+<p>Need some help getting up to speed with Droid terminology? Check out the definitions below:</p>
+<h2>Command</h2>
+<p>A <strong>Command</strong> is something you can run. It optionally takes arguments, and/or options.</p>
+<h2>Task</h2>
+<p>A <strong>Task</strong> is a <strong>Command</strong> with it's arguments and/or options specified. A <strong>Task</strong> is usually
+part of a <strong>Target</strong></p>
+<h2>Target</h2>
+<p>A <strong>Target</strong> is a sequenence of <strong>Tasks</strong>, that can be executed without any parameters.
+One <strong>Project</strong> can have multiple targets, such as <code>build</code>, <code>test</code>, <code>deploy</code>, etc. You define the
+targets your project supports.</p>
+<h2>Project</h2>
+<p>A <strong>Project</strong> is a set of targets, usually defined in a <code>droid.yml</code> file in the root of your project.</p>
+                                </div>
+    </div>
+</div>
+
+
+<footer id="footer" class="jumbotron">
+	<section class="container">
+		<div class="row">
+				<div class="col-md-5 col-md-push-1">
+										<a class="addthis_button_github" href="http://github.com/droid-php" target="_blank"></a>
+				</div>
+				<div class="col-md-5 col-md-push-1">
+					<h2>Droid is open-source</h2>
+					<p>You can use Droid in your projects and for your server configuration management for free.
+                    You can easily extend it's functionality through plugins, and use plugins of others.</p>
+					<p>For further details, check out <a href="https://github.com/droid-php/">github.com/droid-php</a></p>
+				</div>
+		</div>	
+	</section>
+</footer>
+
+<p class="small text-muted text-center">Copyright &copy; 2016, <a target="_blank" href="http://www.linkorb.com/">LinkORB</a>. Powered by <a target="_blank" href="http://github.com/linkorb/blazon">Blazon static site generator</a></p>
+<br>
+
+<!-- JavaScript libs are placed at the end of the document so the pages load faster -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.2.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script src="/assets/script.js"></script>
+
+</body>
+</html>
