@@ -121,15 +121,29 @@
         </div>
         <div class="col-md-9">
             
-                <h1>Command <code>git:merge</code></h1>
-    <p class="lead">Merge branch</p>
+                <h1>Command <code>ssh:exec</code></h1>
+    <p class="lead">Execute a command over ssh</p>
 
     <h3>Arguments</h3>
     <ul>
+            <li><code>hostname</code>: Hostname</li>
+            <li><code>cmd</code>: Command to execute on the remote host</li>
         </ul>
     <h3>Options</h3>
     <ul>
-            <li><code>--path</code>: Path to the local git repository
+            <li><code>--port</code>: Port number
+        </li>
+            <li><code>--username</code>: Login as username
+        </li>
+            <li><code>--password</code>: Use password based authentication
+        </li>
+            <li><code>--timeout</code>: Timeout in seconds, defaults to 1
+        </li>
+            <li><code>--agent</code>: Enable ssh-agent authentication
+        </li>
+            <li><code>--keyfile</code>: Use ssh-key filename
+        </li>
+            <li><code>--passphrase</code>: Use passphrase for keyfile
         </li>
         </ul>
 
