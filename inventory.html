@@ -129,23 +129,74 @@
         <div class="col-md-2">
         </div>
         <div class="col-md-8">
-            
-                <h1>Command <code>composer:install</code></h1>
-    <p class="lead">Composer install</p>
+            <h1>Inventory</h1>
+<p>In the <a href="targets">previous steps</a> you've learned how to automate tasks and targets on your local machine.</p>
+<p>In this section we'll be talking about using Droid to manage remote machines</p>
+<h2>Use cases</h2>
+<p>Using Droid on remote machines has a couple of very interesting use-cases:</p>
+<ul>
+<li><strong>Application deployment</strong>: Execute the checkout, update, and build targets on your production servers in parallel</li>
+<li><strong>Configuration management</strong>: Use Droid to configure your servers, from a clean OS installation to a fully functional production server.</li>
+</ul>
+<h2>Defining your inventory</h2>
+<p>The <strong>inventory</strong> is a list of hosts (servers, virtual machines, etc) and optionally groups (a list of hosts that fulfill a similar role)</p>
+<h3>Defining hosts</h3>
+<p>You can configure your hosts in the <a href="droid-yml">droid.yml</a> file.</p>
+<p>Example:</p>
+<pre><code class="language-yaml">hosts:
+    web1:
+        address: web1.example.com
+        auth: agent
+        username: droid
+        variables:
+            os: debian
+    "web2.example.com":
+        auth: key
+        variables:
+            os: redhat
 
-    <h3>Arguments</h3>
-    <ul>
-            <li><code>message</code>: Message to output</li>
-        </ul>
-    <h3>Options</h3>
-    <ul>
-            <li><code>--color</code>: Set color of the output
-        </li>
-        </ul>
-
-    <center><a href="/commands" class="btn btn-success">Back to command index</a></center>
-    <br /><br />
-        </div>
+groups:
+    web:
+        hosts:
+            - web1
+            - web2.example.com
+        variables:
+            server: apache2
+</code></pre>
+<p>In this example, we're defining 2 hosts: <code>web1</code> and <code>web2.example.com</code>.</p>
+<h4>address</h4>
+<p>For each host, you can specify an <code>address</code>. If you don't specify the address (as seen for <code>web1</code>), the address will be the same as the name of the host (as seen in <code>web2.example.com</code>)</p>
+<h4>username</h4>
+<p>For each host you can specify the username that Droid will use to connect. If you don't specify this, the username will
+be <code>droid</code></p>
+<h4>auth</h4>
+<p>Droid is using ssh to connect to the remote hosts. You can configure how you'd like to authenticate. Read more about <a href="authentication">authentication</a>.</p>
+<h4>variables</h4>
+<p>You can define variables at the host level. These variables may be used in your <a href="targets">targets</a> later on.</p>
+<h3>Groups</h3>
+<p>You can define groups of hosts. In the example above, we're defining a group called <code>web</code> that contins the <code>web1</code> and <code>web2.example.com</code> hosts.</p>
+<p>After defining a group, you can easily execute tasks in parallel on a group of servers.</p>
+<p>Additionally you can define variables on the group that may be used in your <a href="targets">targets</a> later on.</p>
+<h2>Executing remote tasks and targets</h2>
+<p>After defining your inventory, you can now define <a href="targets">targets</a> that can be executed remotely. This is done by specifying the <code>hosts</code> that the target should be executed on.</p>
+<p>For example:</p>
+<pre><code class="language-yaml">targets:
+    remotetest:
+        name: "Create app directory"
+        hosts: web
+        tasks:
+            - "fs:mkdir": path="/my-app" force=true</code></pre>
+<p>You can execute this by running:</p>
+<pre><code>$ droid remotetest</code></pre>
+<p>Droid will now connect to all hosts in the <code>web</code> group (<code>web1</code> and <code>web2.example.com</code>) and execute the specified tasks
+there in parallel. In this case, Droid will create the <code>/my-app</code> directory on both hosts.</p>
+<h2>How does this work?</h2>
+<p>Droid can be packaged as a single binary phar file  (see <a href="installation">installation</a>).</p>
+<p>When you're running targets against remote hosts, Droid will use ssh to check if the droid binary is available on the remote host. It verifies if it's the same binary as you have on your local machine by validating the sha1 checksum of both files.</p>
+<p>If there is no Droid binary on the remote host, or if the binary is different from your local binary, Droid will first upload your local version to the remote host using scp.</p>
+<p>After this, standard ssh command execution is used to execute the commands that have been defined in your local <code>droid.yml</code> file, on the remote server, using the remote Droid binary.</p>
+<p>The next time you run Droid, the remote version already exists, and will match the checksum of your local version, so the upload/scp command will be skipped. Once you update your local Droid binary, the next time you run a remote task, Droid will detect the change, and upload your newer binary to the remote host before executing any commands.</p>
+                                </div>
         <div class="col-md-2">
         </div>
     </div>

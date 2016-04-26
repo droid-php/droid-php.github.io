@@ -129,23 +129,62 @@
         <div class="col-md-2">
         </div>
         <div class="col-md-8">
-            
-                <h1>Command <code>composer:install</code></h1>
-    <p class="lead">Composer install</p>
+            <h1>Using Droid</h1>
+<p>Cool, you are ready to try out Droid? We're sure you're going to love it.</p>
+<p>We suggest you check out the <a href="/installation">installation</a> page first.</p>
+<h2>List the available commands</h2>
+<pre><code class="language-sh">$ droid list
+Droid version 1.0.0
 
-    <h3>Arguments</h3>
-    <ul>
-            <li><code>message</code>: Message to output</li>
-        </ul>
-    <h3>Options</h3>
-    <ul>
-            <li><code>--color</code>: Set color of the output
-        </li>
-        </ul>
+Usage:
+  command [options] [arguments]
 
-    <center><a href="/commands" class="btn btn-success">Back to command index</a></center>
-    <br /><br />
-        </div>
+Options:
+  -h, --help            Display this help message
+  -v|vv|vvv, --verbose  Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+Available commands:
+  config            Show project configuration
+  help              Displays help for a command
+  inventory         Show inventory configuration
+  list              Lists commands
+ bower
+  bower:install     Bower install
+ composer
+  composer:install  Composer install
+ dbtk
+  dbtk:schema-load  Load schema into database
+ debug
+  debug:echo        Echo a message to the console</code></pre>
+<p><em>shortened the output for brevity</em></p>
+<p>This commmand will list the available Droid commands. You'll notice that there are several 'global' commands, such as <code>config</code>, <code>help</code>, <code>inventory</code>, <code>list</code>, etc.</p>
+<p>Additionally, you'll find several plugin-specific commands, such as <code>composer:install</code> or <code>debug:echo</code></p>
+<h2>Learning more about the available commands</h2>
+<p>To learn more about these commands, use the <code>--help</code> flag:</p>
+<pre><code class="language-sh">$ droid debug:echo --help
+Usage:
+  debug:echo [options] [--] &lt;message&gt;
+
+Arguments:
+  message               Message to output
+
+Options:
+  -c, --color=COLOR     Set color of the output
+  -u, --uppercase       Uppercase the output
+Help:
+ Echo a message to the console</code></pre>
+<p>You'll find that the <code>debug:echo</code> command takes a <code>message</code> argument, and optionally a color and uppercase flag.</p>
+<h2>Running commands</h2>
+<p>You can call this command like this:</p>
+<pre><code class="language-sh">$ droid debug:echo "hello world"
+hello world
+$ droid debug:echo "hello world" -u
+HELLO WORLD</code></pre>
+<h2>Next steps</h2>
+<p>You are now familiar with using Droid to call ad-hoc commands.</p>
+<p>Read on to start using the real power of Droid through <strong>automation</strong></p>
+<center><a href="/droid-yml" class="btn btn-lg btn-success">Configuring Droid for automation</a></center>
+                                </div>
         <div class="col-md-2">
         </div>
     </div>

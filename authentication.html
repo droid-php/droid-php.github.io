@@ -129,23 +129,38 @@
         <div class="col-md-2">
         </div>
         <div class="col-md-8">
-            
-                <h1>Command <code>composer:install</code></h1>
-    <p class="lead">Composer install</p>
-
-    <h3>Arguments</h3>
-    <ul>
-            <li><code>message</code>: Message to output</li>
-        </ul>
-    <h3>Options</h3>
-    <ul>
-            <li><code>--color</code>: Set color of the output
-        </li>
-        </ul>
-
-    <center><a href="/commands" class="btn btn-success">Back to command index</a></center>
-    <br /><br />
-        </div>
+            <h1>Authentication</h1>
+<p>When using Droid with <a href="inventory">inventories</a>, you can specify different ways of authentication when connecting to remote hosts.</p>
+<p>Connections are established over standard SSH. You can use the following methods of authentication</p>
+<h2>Username/Password</h2>
+<p>While not ideal, you can manage remote hosts that only support password-based authentication. You can configure password-based authentication in your <a href="droid-yml">droid.yml</a> file as follows:</p>
+<pre><code class="language-yml">hosts:
+    web1:
+        address: web1.example.com
+        auth: password
+        username: root
+        password: secret</code></pre>
+<h2>SSH keys</h2>
+<p>You can also authenticate using standard SSH keys. You can configure key-based authentication in your <a href="droid-yml">droid.yml</a> file as follows:</p>
+<pre><code class="language-yml">hosts:
+    web1:
+        address: web1.example.com
+        auth: key
+        username: joe
+        keyfile: /home/joe/.ssh/id_rsa
+        keypass: othersecret</code></pre>
+<p>The <code>keyfile</code> is an absolute or relative path to a private key.
+The <code>keypass</code> only needs to be specified in case the private key is encrypted using a passphrase.</p>
+<h2>SSH Agent</h2>
+<p>The simplest way of authentication is by using ssh-agent. This way all the keys that are available in the current session can be used for authentication automatically. If you have not already done so, you can add a key to a running ssh-agent by running:</p>
+<pre><code>ssh-add ~/.ssh/my_private_key</code></pre>
+<p>You can configure agent based authentication in your <a href="droid-yml">droid.yml</a> file as follows:</p>
+<pre><code class="language-yml">hosts:
+    web1:
+        address: web1.example.com
+        auth: agent
+        username: joe</code></pre>
+                                </div>
         <div class="col-md-2">
         </div>
     </div>

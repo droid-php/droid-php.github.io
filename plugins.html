@@ -108,7 +108,7 @@
           <li class="dropdown">
 			  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Developers <b class="caret"></b></a>
 			  <ul class="dropdown-menu">
-				  <li><a href="/plugin-overview">Extending Droid with Plugins</a></li>
+				  <li><a href="/plugins">Extending Droid with Plugins</a></li>
 			  </ul>
 		  </li>
           <li><a href="/commands">Command index</a></li>
@@ -129,23 +129,46 @@
         <div class="col-md-2">
         </div>
         <div class="col-md-8">
-            
-                <h1>Command <code>composer:install</code></h1>
-    <p class="lead">Composer install</p>
+            <h1>Extending Droid with Plugins</h1>
+<p>Droid comes with a set of <a href="commands">commands</a> that you can use out of the box.</p>
+<p>But if the commands you're looking for are not (yet) available, then don't worry: Extending Droid with Plugins is easy.</p>
+<h2>Built on Symfony Console Commands</h2>
+<p>All Droid commands are nothing more than standard <a href="http://symfony.com/doc/current/components/console/introduction.html">Symfony Console Commands</a>. The Symfony documentation is great,
+and using this component is very easy.</p>
+<p>Using standard Symfony classes and interfaces, you can define the commands and it's arguments and options.</p>
+<h2>DroidPlugin class</h2>
+<p>Once you've created a repository with the Command(s) you'd like to add to Droid, you can do so by simply adding a <code>DroidPlugin</code> class to the root of your project's namespace. For example, if your <code>composer.json</code> contains the following line:</p>
+<pre><code class="language-yml">"autoload": {
+        "psr-4": {
+            "Acme\\Droid\\Plugin\\FooBar\\": "src/"
+        }
+    }</code></pre>
+<p>Then you'll need to create a DroidPlugin class similar to this:</p>
+<pre><code class="language-php">&lt;?php
 
-    <h3>Arguments</h3>
-    <ul>
-            <li><code>message</code>: Message to output</li>
-        </ul>
-    <h3>Options</h3>
-    <ul>
-            <li><code>--color</code>: Set color of the output
-        </li>
-        </ul>
+namespace Acme\Droid\Plugin\FooBar;
 
-    <center><a href="/commands" class="btn btn-success">Back to command index</a></center>
-    <br /><br />
-        </div>
+class DroidPlugin
+{
+    public function __construct($droid)
+    {
+        $this-&gt;droid = $droid;
+    }
+
+    public function getCommands()
+    {
+        $commands = [];
+        $commands[] = new \Acme\Droid\Plugin\FooBar\Command\FooBarHelloCommand();
+        $commands[] = new \Acme\Droid\Plugin\FooBar\Command\FooBarByeCommand();
+        return $commands;
+    }
+}</code></pre>
+<p>Droid will automatically detect this class, and call <code>getCommands()</code> to learn which commands you'd like to add to Droid.</p>
+<h2>Next steps</h2>
+<p>You are now familiar with the way Droid loads plugins.</p>
+<p>Read on for a full step-by-step tutorial on creating and publishing your own Droid command!</p>
+<center><a href="/droid-yml" class="btn btn-lg btn-success">Plugin Tutorial</a></center>
+                                </div>
         <div class="col-md-2">
         </div>
     </div>

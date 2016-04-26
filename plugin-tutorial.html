@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport"    content="width=device-width, initial-scale=1.0">
+	
+	<title>Droid: Task Runner for PHP</title>
+
+	<!-- Bootstrap itself -->
+	<link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+	<!-- Icons -->
+	<link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet"> 
+	<!-- Fonts -->
+	<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,700"> 
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.2.0/styles/default.min.css">
+	<!-- Custom styles -->
+	<link rel="stylesheet" href="/assets/style.css">
+    <style>
+    .header {
+        background: linear-gradient(to bottom, #405080 0%,#203040 100%) !important;
+    }
+    .navbar, .dropdown-menu, .navbar-default .navbar-nav>.open>a, .dropdown-menu>li>a {
+        margin-bottom: 0px !important;
+        background-color: #203040 !important;
+        border-radius: 0px !important;
+        border: 0px none !important;
+    }
+    .navbar, .dropdown-menu, .navbar-default .navbar-nav>.open>a, .dropdown-menu>li>a:hover {
+		color: #D87563 !important;
+	}
+
+    .navbar li a, .navbar a.navbar-brand {
+        color: #ffffff !important;
+    }
+    
+    .navbar li a.cta {
+        background-color: #80c080 !important;
+        border-radius: 5px;
+        margin-top: 9px;
+        padding: 5px;
+        color: #ffffff !important;
+    }
+	
+	.btn {
+		color: #ffffff !important;
+	}
+    
+    /* make sidebar nav vertical */ 
+    @media (min-width: 768px) {
+      .sidebar-nav {
+          margin-top: 20px;
+          margin-bottom: 20px;
+      }
+      .sidebar-nav .navbar .navbar-collapse {
+        padding: 0;
+        max-height: none;
+      }
+      .sidebar-nav .navbar ul {
+        float: none;
+      }
+      .sidebar-nav .navbar ul:not {
+        display: block;
+      }
+      .sidebar-nav .navbar li {
+        float: none;
+        display: block;
+      }
+      .sidebar-nav .navbar li a {
+        padding-top: 12px;
+        padding-bottom: 12px;
+      }
+    }
+	#footer {
+		margin-top: 20px;
+	}
+	.btn {
+		margin-bottom: 20px;
+	}
+    </style>
+
+	<!--[if lt IE 9]> <script src="assets/js/html5shiv.js"></script> <![endif]-->
+</head>
+
+<body>
+  <!-- Static navbar -->
+  <nav class="navbar navbar-default">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="/">Droid</a>
+      </div>
+      <div id="navbar" class="navbar-collapse collapse">
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="/">Home</a></li>
+          <li class="dropdown">
+			  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Configuration <b class="caret"></b></a>
+			  <ul class="dropdown-menu">
+				  <li><a href="/droid-yml">Configuring Droid with droid.yml</a></li>
+				  <li><a href="/targets">Tasks and targets</a></li>
+				  <li><a href="/inventory">Remote tasks with inventories</a></li>
+			  </ul>
+		  </li>
+          <li class="dropdown">
+			  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Developers <b class="caret"></b></a>
+			  <ul class="dropdown-menu">
+				  <li><a href="/plugin-overview">Extending Droid with Plugins</a></li>
+			  </ul>
+		  </li>
+          <li><a href="/commands">Command index</a></li>
+          <li class="dropdown">
+			  <a href="#" class="dropdown-toggle cta" data-toggle="dropdown">Getting started <b class="caret"></b></a>
+			  <ul class="dropdown-menu">
+				  <li><a href="/installation">Installation</a></li>
+				  <li><a href="/usage">Using Droid</a></li>
+				  <li><a href="/terminology">Terminology</a></li>
+			  </ul>
+		  </li>
+        </ul>
+      </div><!--/.nav-collapse -->
+    </div><!--/.container-fluid -->
+  </nav>
+<div class="container">
+    <div class="row">
+        <div class="col-md-2">
+        </div>
+        <div class="col-md-8">
+            <h1>Plugin Tutorial</h1>
+<p>In the <a href="plugins">previous</a> page, you've learned how plugins work.</p>
+<p>In this page we'll be giving you a step-by-step tutorial on how to create your own first Droid plugin!</p>
+<h2>Initializing the project directory / repository</h2>
+<p>First you'll need a directory to create your project files in:</p>
+<pre><code>mkdir ~/my-droid-plugin
+cd ~/my-droid-plugin
+git init</code></pre>
+<p>All your plugin files will go in the <code>my-droid-plugin</code> directory. We've called <code>git init</code> so you can commit your files, and upload the to version control services such as GitHub or BitBucket.</p>
+<h2>Create a composer.json file</h2>
+<p>We'll be using composer to manage our project's dependencies.
+If you're not yet familiar with composer, please refer to the excellent documentation on <a href="http://getcomposer.org">getcomposer.org</a></p>
+<p>Create a file called <code>composer.json</code> in the root of your project directory:</p>
+<pre><code class="language-json">{
+    "name": "acme/droid-foobar",
+    "description": "Droid plugin droid-foobar",
+    "homepage": "http://www.github.com/droid-php/droid-fs",
+    "keywords": ["droid"],
+    "type": "library",
+    "require": {
+        "php": "&gt;=5.3.0",
+        "symfony/console": "~2.7"
+    },
+    "autoload": {
+        "psr-4": {
+            "Acme\\Droid\\Plugin\\FooBar\\": "src/"
+        }
+    },
+    "license": "MIT"
+}</code></pre>
+<p>Be sure to update the <code>name</code>, <code>description</code> and <code>psr-4</code> namespace to match your own names.</p>
+<p>We'll be using the name <strong>Acme</strong> as an example name for your organization. <strong>FooBar</strong> will be the example name of your plugin.</p>
+<p>Now that you've created your <code>composer.json</code> file, you can install the dependencies:</p>
+<pre><code>composer install</code></pre>
+<p>You'll notice that the <code>vendor/</code> directory was created.</p>
+<h2>Create a .gitignore file</h2>
+<p>In the root of your directory, create a file called <code>.gitignore</code>:</p>
+<pre><code>vendor/</code></pre>
+<p>This will tell git to ignore the vendor directory, as this should not be sent to version control.</p>
+<h2>Create the console command</h2>
+<p>In your project directory, create a directory called <code>bin/</code>.
+Next, create a file called <code>bin/droid-foobar</code> with the following PHP code:</p>
+<pre><code class="language-php">#!/usr/bin/env php
+&lt;?php
+
+use Symfony\Component\Console\Application;
+
+$loader = __DIR__ . '/../vendor/autoload.php';
+
+if (!file_exists($loader)) {
+    die(
+        'You must set up the project dependencies, run the following commands:' . PHP_EOL .
+        'curl -s http://getcomposer.org/installer | php' . PHP_EOL .
+        'php composer.phar install' . PHP_EOL
+    );
+}
+
+require $loader;
+
+$application = new Application('Droid FooBar', '1.0.0');
+$application-&gt;setCatchExceptions(true);
+$application-&gt;add(new Acme\Droid\Plugin\FooBar\Command\FooBarHelloCommand());
+$application-&gt;run();</code></pre>
+<h2>Create the actual command (FooBarHelloCommand)</h2>
+<p>In the root of your project, create a directory called <code>src/</code> and in there a directory called <code>Command/</code>.</p>
+<p>Next, create a file called <code>src/Command/FooBarHelloCommand.php</code> with the following contents:</p>
+<pre><code class="language-php">&lt;?php
+
+namespace Acme\Droid\Plugin\Command;
+
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+
+class FooBarHelloCommand extends Command
+{
+    public function configure()
+    {
+        $this-&gt;setName('foobar:hello')
+            -&gt;setDescription('Echo a message to the console')
+            -&gt;addArgument(
+                'name',
+                InputArgument::REQUIRED,
+                'Name of the person to greet'
+            )
+            -&gt;addOption(
+                'uppercase',
+                'u',
+                InputOption::VALUE_NONE,
+                'Uppercase the output'
+            )
+        ;
+    }
+
+    public function execute(InputInterface $input, OutputInterface $output)
+    {
+        $name = $input-&gt;getArgument('name');
+        $message = 'Hello ' . $name . ', greetings from FooBar!';
+        if ($input-&gt;getOption('uppercase')) {
+            $message = strtoupper($message);
+        }
+        $output-&gt;writeLn($message);
+    }
+}</code></pre>
+<h2>Testing your command</h2>
+<p>You can now try out your command by running:</p>
+<pre><code>bin/droid-foobar foobar:hello Joe</code></pre>
+<p>If all works well, the output will be:</p>
+<pre><code>Hello Joe, greetings from FooBar!</code></pre>
+<p>You can try out the option you've added (<code>uppercase</code>) by running the command like this:</p>
+<pre><code>bin/droid-foobar --uppercase foobar:hello Joe</code></pre>
+<p>You should now see the same message, but in all uppercase</p>
+<p>You have now created a simple Symfony Console Command. To extend it's functionality, you'll simply edit the <code>execute</code> method of this class.</p>
+<h2>Turn your Symfony Console Command into a Droid Plugin</h2>
+<p>There's one simple step left in order for your standard Symfony Console Command to become a Droid Plugin.</p>
+<p>For Droid to know that your project is actually a Droid Plugin, you'll simply need to create a <code>DroidPlugin</code> class
+in the root of your project's namespace. In this case, create a file called <code>src/DroidPlugin.php</code> with the following contents:</p>
+<pre><code class="language-php">&lt;?php
+
+namespace Acme\Droid\Plugin\FooBar;
+
+class DroidPlugin
+{
+    public function __construct($droid)
+    {
+        $this-&gt;droid = $droid;
+    }
+
+    public function getCommands()
+    {
+        $commands = [];
+        $commands[] = new \Acme\Droid\Plugin\FooBar\Command\FooBarHelloCommand();
+        // Optional: Add more commands here if your plugin supports multiple
+        return $commands;
+    }
+}</code></pre>
+<h2>Using your Droid Plugin</h2>
+<p>You can now commit your code through Git, and push it to a code hosting service like GitHub, BitBucket, etc.
+Make sure you add a proper <a href="http://semver.org/">semver</a> tag, such as <code>v1.0.0</code>.</p>
+<p>After that, go to <a href="http://packagist.org">packagist.org</a> and submit the URL to your project for Packagist to index it.</p>
+<p>To use your new plugin in one of your projects, simply edit the <code>composer.json</code> file of the project you'd like to use Droid and your plugin, and add the following lines to your <code>require</code> or <code>require-dev</code> section:</p>
+<pre><code class="language-json">"require": {
+    "droid/droid": "~1.0",
+    "acme/droid-foobar": "~1.0"
+}</code></pre>
+<p>After running <code>composer update</code> you can now use your plugin like this:</p>
+<pre><code>vendor/bin/droid foobar:hello Joe</code></pre>
+                                </div>
+        <div class="col-md-2">
+        </div>
+    </div>
+</div>
+
+
+<footer id="footer" class="jumbotron">
+	<section class="container">
+		<div class="row">
+				<div class="col-md-5 col-md-push-1">
+										<a class="addthis_button_github" href="http://github.com/droid-php" target="_blank"></a>
+				</div>
+				<div class="col-md-5 col-md-push-1">
+					<h2>Droid is open-source</h2>
+					<p>You can use Droid in your projects and for your server configuration management for free.
+                    You can easily extend it's functionality through plugins, and use plugins of others.</p>
+					<p>For further details, check out <a href="https://github.com/droid-php/">github.com/droid-php</a></p>
+				</div>
+		</div>	
+	</section>
+</footer>
+
+<p class="small text-muted text-center">
+	Copyright &copy; 2016, <a target="_blank" href="http://www.linkorb.com/">LinkORB</a>. Powered by <a target="_blank" href="http://github.com/linkorb/blazon">Blazon static site generator</a><br />
+
+	This documentation is open source, and managed on <a href="http://github.com/droid-php/documentation">github.com/droid-php/website</a><br />
+
+	If you'd like to enhance these pages or add corrections, we'd welcome you to fork this repository, and send us a pull-request with 
+	your proposed changes.
+
+</p>
+
+<br>
+
+<!-- JavaScript libs are placed at the end of the document so the pages load faster -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.2.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script src="/assets/script.js"></script>
+
+</body>
+</html>

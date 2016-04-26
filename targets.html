@@ -129,23 +129,95 @@
         <div class="col-md-2">
         </div>
         <div class="col-md-8">
-            
-                <h1>Command <code>composer:install</code></h1>
-    <p class="lead">Composer install</p>
+            <h1>Targets</h1>
+<p>Using the <a href="droid-yml">droid.yml</a> file you can define a set of <strong>targets</strong> that contain a sequence of tasks to perform.</p>
+<p>This will allow you to type something like <code>droid mybuild</code>, instructing Droid to</p>
+<ul>
+<li>Download your project dependencies</li>
+<li>Download and compile assets</li>
+<li>Compress and minify images, scripts and stylesheets</li>
+<li>...etc</li>
+</ul>
+<p>All in a <strong>single command</strong>!</p>
+<h2>Use cases</h2>
+<p>Using Droid targets has a couple of interesting use-cases:</p>
+<ul>
+<li><strong>Continuous Integration</strong>: Automatically checkout, update, and build new versions of your application</li>
+<li><strong>Building project assets</strong>: Use a single command to compile your .less, .sass etc files into optimized css files, and minify your javascripts</li>
+<li><strong>Automated testing</strong>: Script your unit-tests, acceptance-tests, convention checkers, etc</li>
+<li><strong>Script daily chores</strong>: As long as there are <a href="commands">commands</a> for it, you can script it :)</li>
+</ul>
+<h2>Simple <code>droid.yml</code> file with targets</h2>
+<p>Here's a simple example of a <code>droid.yml</code> file:</p>
+<pre><code class="language-yml">targets:
+    mybuild:
+        tasks:
+            - name: Install composer dependencies
+              "composer:install": prefer=dist
+            - name: Install bower dependencies
+              "bower:install": ~
+    mycleanup:
+        tasks:
+            - name: Remove vendor directory
+              "fs:rmdir": path="vendor" force=true
+            - name: Remove bower directory
+              "fs:rmdir": path="bower_components"</code></pre>
+<p>To run the <code>mybuild</code> target, simply run:</p>
+<pre><code>$ droid mybuild</code></pre>
+<p>This will install both the composer and bower dependencies of your project.</p>
+<p>To cleanup your working directory by removing the composer and bower files, simply run:</p>
+<pre><code>$ droid mycleanup</code></pre>
+<h2>Tasks</h2>
+<p>In the example, you'll see that each target (<code>mybuild</code> and <code>mycleanup</code>) contain a list of tasks.</p>
+<p>A task is simply one <a href="commands">command</a> to execute, with it's arguments specified.</p>
+<pre><code class="language-yml">- name: Install composer dependencies
+  "composer:install": prefer=dist</code></pre>
+<p>This task instructs droid to run the <a href="commands__composer__install">composer:install</a> command, with arguments <code>prefer</code> set to <code>dist</code>.</p>
+<p>The <code>name</code> allows you to specify a human-readable version of what your task does. This will be displayed on the console
+when the task is being executed.</p>
+<p>You can specify tasks in 2 ways:</p>
+<h3>Short notation (standard)</h3>
+<pre><code class="language-yml">- name: Install composer dependencies
+  "composer:install": prefer=dist</code></pre>
+<h3>Dictionary notation</h3>
+<pre><code class="language-yml">- name: Install composer dependencies
+  "composer:install": { prefer: "dist" }</code></pre>
+<h3>Expanded/long notation (useful if you're passing many parameters)</h3>
+<pre><code class="language-yml">- name: Install composer dependencies
+  command: "composer:install"
+  arguments:
+      prefer: dist</code></pre>
+<h2>Variables</h2>
+<p>You can define variables that can be used as command arguments in your tasks.</p>
+<p>Variables can be defined on projects, targets, hosts and hostgroups.</p>
+<h3>Target variables</h3>
+<pre><code class="language-yml">targets:
+    echotest:
+        variables:
+            greeting: "Hello"
 
-    <h3>Arguments</h3>
-    <ul>
-            <li><code>message</code>: Message to output</li>
-        </ul>
-    <h3>Options</h3>
-    <ul>
-            <li><code>--color</code>: Set color of the output
-        </li>
-        </ul>
+        tasks:
+            - name: "Greet the user"
+              "debug:echo" message="{{greeting}} dear user!" color="green"</code></pre>
+<p>In this example, we've defined the <code>greeting</code> variable on the <code>echotest</code> <strong>target</strong>.
+When running the &quot;Greet the user&quot; task, the <a href="commands__debug__echo">debug:echo</a> command is called with argument
+<code>message</code> set to &quot;Hello dear user&quot;. The message is using the <code>{{greeting}}</code> variable.</p>
+<h3>Project variables</h3>
+<pre><code class="language-yml">variables:
+    greeting: "Hello"
 
-    <center><a href="/commands" class="btn btn-success">Back to command index</a></center>
-    <br /><br />
-        </div>
+targets:
+    echotest:
+        tasks:
+            - name: "Greet the user"
+              "debug:echo" message="{{greeting}} dear user!" color="blue"</code></pre>
+<p>In this example, we've defined the <code>greeting</code> variable on the <strong>project</strong>. This way you can use the variable
+in all it's targets and tasks.</p>
+<h2>Next steps</h2>
+<p>You are now familiar with using Droid for automation of your local machine.</p>
+<p>You can take this to the next level by learning about inventories, so you can manage remote machines.</p>
+<center><a href="/inventory" class="btn btn-lg btn-success">Remote management with inventory</a></center>
+                                </div>
         <div class="col-md-2">
         </div>
     </div>

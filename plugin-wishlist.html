@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport"    content="width=device-width, initial-scale=1.0">
+	
+	<title>Droid: Task Runner for PHP</title>
+
+	<!-- Bootstrap itself -->
+	<link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+	<!-- Icons -->
+	<link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet"> 
+	<!-- Fonts -->
+	<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,700"> 
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.2.0/styles/default.min.css">
+	<!-- Custom styles -->
+	<link rel="stylesheet" href="/assets/style.css">
+    <style>
+    .header {
+        background: linear-gradient(to bottom, #405080 0%,#203040 100%) !important;
+    }
+    .navbar, .dropdown-menu, .navbar-default .navbar-nav>.open>a, .dropdown-menu>li>a {
+        margin-bottom: 0px !important;
+        background-color: #203040 !important;
+        border-radius: 0px !important;
+        border: 0px none !important;
+    }
+    .navbar, .dropdown-menu, .navbar-default .navbar-nav>.open>a, .dropdown-menu>li>a:hover {
+		color: #D87563 !important;
+	}
+
+    .navbar li a, .navbar a.navbar-brand {
+        color: #ffffff !important;
+    }
+    
+    .navbar li a.cta {
+        background-color: #80c080 !important;
+        border-radius: 5px;
+        margin-top: 9px;
+        padding: 5px;
+        color: #ffffff !important;
+    }
+	
+	.btn {
+		color: #ffffff !important;
+	}
+    
+    /* make sidebar nav vertical */ 
+    @media (min-width: 768px) {
+      .sidebar-nav {
+          margin-top: 20px;
+          margin-bottom: 20px;
+      }
+      .sidebar-nav .navbar .navbar-collapse {
+        padding: 0;
+        max-height: none;
+      }
+      .sidebar-nav .navbar ul {
+        float: none;
+      }
+      .sidebar-nav .navbar ul:not {
+        display: block;
+      }
+      .sidebar-nav .navbar li {
+        float: none;
+        display: block;
+      }
+      .sidebar-nav .navbar li a {
+        padding-top: 12px;
+        padding-bottom: 12px;
+      }
+    }
+	#footer {
+		margin-top: 20px;
+	}
+	.btn {
+		margin-bottom: 20px;
+	}
+    </style>
+
+	<!--[if lt IE 9]> <script src="assets/js/html5shiv.js"></script> <![endif]-->
+</head>
+
+<body>
+  <!-- Static navbar -->
+  <nav class="navbar navbar-default">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="/">Droid</a>
+      </div>
+      <div id="navbar" class="navbar-collapse collapse">
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="/">Home</a></li>
+          <li class="dropdown">
+			  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Configuration <b class="caret"></b></a>
+			  <ul class="dropdown-menu">
+				  <li><a href="/droid-yml">Configuring Droid with droid.yml</a></li>
+				  <li><a href="/targets">Tasks and targets</a></li>
+				  <li><a href="/inventory">Remote tasks with inventories</a></li>
+			  </ul>
+		  </li>
+          <li class="dropdown">
+			  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Developers <b class="caret"></b></a>
+			  <ul class="dropdown-menu">
+				  <li><a href="/plugin-overview">Extending Droid with Plugins</a></li>
+			  </ul>
+		  </li>
+          <li><a href="/commands">Command index</a></li>
+          <li class="dropdown">
+			  <a href="#" class="dropdown-toggle cta" data-toggle="dropdown">Getting started <b class="caret"></b></a>
+			  <ul class="dropdown-menu">
+				  <li><a href="/installation">Installation</a></li>
+				  <li><a href="/usage">Using Droid</a></li>
+				  <li><a href="/terminology">Terminology</a></li>
+			  </ul>
+		  </li>
+        </ul>
+      </div><!--/.nav-collapse -->
+    </div><!--/.container-fluid -->
+  </nav>
+<div class="container">
+    <div class="row">
+        <div class="col-md-2">
+        </div>
+        <div class="col-md-8">
+            <h1>Plugin Wishlist</h1>
+<p><a href="plugin-overview">Extending Droid with Plugins</a> is fun and easy!</p>
+<p>We're keeping a wishlist of plugins we're looking forward to adding. If you're interested in helping out, we'd be happy to merge any pull requests or list urls to your plugins!</p>
+<p>New to writing Droid plugins? Check out our step-by-step <a href="plugin-tutorial">tutorial</a>.</p>
+<h2>Conventions</h2>
+<p>The following list describes the plugins and commands we’ll need for droid.
+The droid commands are seperated into repositories per functionality. For example <code>droid-service</code> handles service start, stop, reload, restart, and <code>droid-fs</code> handles filesystem commands like mkdir, copy, etc.</p>
+<p>For each command, it lists the commandname (i.e. fs:copy) and a list of arguments. Arguments are always required unless specified otherwise.
+Additionally it lists a set of options indicated as <code>--force|-f</code>. This shows a long option name (--force), and a shortcut (-f). Some options require parameters (like --username=joe) and others are just a flag (like --force).</p>
+<p>Each command should return exitcode 0 on success, and other status codes on errors.</p>
+<p>Output should alway go through $output-&gt;write or writeln (never echo, print_r, etc!) and error messages should go through the error output:</p>
+<pre><code>$errOutput = $output instanceof ConsoleOutputInterface ? $output-&gt;getErrorOutput() : $output;
+$output-&gt;writeln('&lt;info&gt;standard message&lt;/info&gt;');
+$errOutput-&gt;writeln('&lt;error&gt;error message&lt;/error&gt;');</code></pre>
+<p>Please submit all changes by forking the existing repository, and sending a pull-requests.
+We can help to create new repositories when needed.</p>
+<h2>droid (commands in the main droid-php/droid repo)</h2>
+<ul>
+<li>core:exec
+<ul>
+<li>cmd: Command to execute</li>
+<li>--env: csv of environment variables to set. Example “HELLO=world, A=b”</li>
+<li>--dir: working directory for executing the cmd</li>
+</ul></li>
+<li>core:download (using guzzle)
+<ul>
+<li>url: URL to download from</li>
+<li>filename: filename to save</li>
+</ul></li>
+</ul>
+<h2>droid-service</h2>
+<ul>
+<li>service:start
+<ul>
+<li>name: service name</li>
+</ul></li>
+<li>service:stop
+<ul>
+<li>name: service name</li>
+</ul></li>
+<li>service:reload
+<ul>
+<li>name: service name</li>
+</ul></li>
+<li>service:restart
+<ul>
+<li>name: service name</li>
+</ul></li>
+</ul>
+<h2>droid-fs (existing repo, needs more commands)</h2>
+<ul>
+<li>fs:copy Copy a single file (#505)
+<ul>
+<li>src: source filename</li>
+<li>dst: destination filename</li>
+<li>--owner: name of the owner of the copied directory (like <code>chown</code>)</li>
+<li>--group: name of the group of the copied directory (like <code>chgrp</code>)</li>
+<li>--filemask: file permission mask (like 0640 - use octdec etc)</li>
+</ul></li>
+<li>fs:rename Move/rename a file or directory to another place
+<ul>
+<li>src: source file or directory to move</li>
+<li>dst: destination to move it to</li>
+<li>--force|f: Force delete, always return exit code 0, even if file does not exist</li>
+</ul></li>
+<li>fs:copydir Copy a directory (optionally recursively)
+<ul>
+<li>src: source directory</li>
+<li>dst: destination directory</li>
+<li>--recursive: recursively copy sub-directories</li>
+<li>--owner: name of the owner of the copied directory (like <code>chown</code>)</li>
+<li>--group: name of the group of the copied directory (like <code>chgrp</code>)</li>
+<li>--filemask: file permission mask (like 0640 - use octdec etc)</li>
+<li>--dirmask: directory mask (like 0700 - use octdec etc)</li>
+</ul></li>
+<li>fs:remove Delete a file or directory (optionally recursively)
+<ul>
+<li>src: file or directory to delete</li>
+<li>--force|f: Force delete, always return exit code 0, even if file does not exist</li>
+<li>--recursive|r: recursive delete</li>
+</ul></li>
+<li>fs:symlink Symlink one file/dir to another
+<ul>
+<li>src: source file or directory to move</li>
+<li>dst: destination to move it to</li>
+<li>--force:f: If the target file already exists, then unlink it so that the link may occur.</li>
+</ul></li>
+</ul>
+<h2>droid-mysql</h2>
+<ul>
+<li>
+<p>mysql:dump Calls mysqldump through exec. For connection string, use <code>parse_url</code> like this: <a href="https://github.com/Radvance/Radvance/blob/master/src/Framework/BaseConsoleApplication.php#L123">https://github.com/Radvance/Radvance/blob/master/src/Framework/BaseConsoleApplication.php#L123</a></p>
+<ul>
+<li>connection: connection string like mysql://username:password@host:port/dbname</li>
+<li>destination: destination filename</li>
+<li>--gzip|-g: gzip the output file (by piping mysqldump through gzip)</li>
+<li>--bzip2|-b: bzip2 the output file (by piping mysqldump through bzip2)</li>
+<li>--compress|-C: Pass --compress to mysqldump: Compress all information sent between the client and the server if both support compression.</li>
+<li>--force|-f: Pass --force to mysqldump: Continue even if an SQL error occurs during a table dump</li>
+<li>--ignore-tables: csv of tablenames to ignore, pass as individual --ignore-table= flags to mysqldump. Example: <code>--ignore-tables=”user, log, bla”</code></li>
+<li>--disable-keys|-K: pass --disable-keys to mysqldump: This makes loading the dump file faster because the indexes are created after all rows are inserted.</li>
+<li>--quick|-q: This option is useful for dumping large tables. It forces mysqldump to retrieve rows for a table from the server a row at a time rather than retrieving the entire row set and buffering it in memory before writing it out.</li>
+<li>--add-locks: This results in faster inserts when the dump file is reloaded.</li>
+<li>--lock-all-tables|-x: Lock all tables across all databases. This is achieved by acquiring a global read lock for the duration of the whole dump.</li>
+<li>--lock-tables|-l: For each dumped database, lock all tables to be dumped before dumping them. The tables are locked with READ LOCAL to permit concurrent inserts in the case of MyISAM tables.</li>
+<li>--single-transaction: Dumps the consistent state of the database at the time when START TRANSACTION was issued without blocking any applications.</li>
+</ul>
+</li>
+<li>mysql:load Loads a mysqldump
+<ul>
+<li>connection: connection string like mysql://username:password@host:port/dbname</li>
+<li>source: dump filename</li>
+<li>--gzip|-g: gzip the source file (by piping mysql through gzip)</li>
+<li>--bzip2|-b: bzip2 the source file (by piping mysql through bzip2)</li>
+</ul></li>
+</ul>
+<h2>droid-db (using PDO)</h2>
+<ul>
+<li>db:create-database
+<ul>
+<li>connection: connection string like mysql://username:password@host:port/dbname</li>
+<li>--force|-f: Force creation, always return exit code 0, even when db already exists.</li>
+</ul></li>
+<li>db:drop-database
+<ul>
+<li>connection: connection string like mysql://username:password@host:port/dbname</li>
+<li>--force|-f: Force creation, always return exit code 0, even when db didn’t exist.     </li>
+</ul></li>
+<li>db:query
+<ul>
+<li>connection: connection string like mysql://username:password@host:port/dbname</li>
+<li>query: sql query to execute. For example: <code>DELETE FROM log WHERE create_at&lt;01-01-2016</code></li>
+</ul></li>
+</ul>
+<h2>droid-composer (existing repo, needs more commands)</h2>
+<ul>
+<li>composer:install Call <code>composer install</code>
+<ul>
+<li>--optimize|-o: Pass --optimize to composer</li>
+<li>--no-dev: Pass --no-dev</li>
+<li>--working-dir|-d: If specified, use the given directory as working directory.</li>
+<li>--no-interaction|-n: Do not ask any interactive question</li>
+<li>--ignore-platform-reqs: Ignore platform requirements (php &amp; ext- packages).</li>
+<li>--prefer-dist</li>
+<li>--prefer-source</li>
+</ul></li>
+<li>composer:update Call <code>composer install</code>
+<ul>
+<li>--optimize|-o: Pass --optimize to composer</li>
+<li>--no-dev: Pass --no-dev</li>
+<li>--working-dir|-d: If specified, use the given directory as working directory.</li>
+<li>--no-interaction|-n: Do not ask any interactive question</li>
+<li>--ignore-platform-reqs: Ignore platform requirements (php &amp; ext- packages).</li>
+<li>--prefer-dist</li>
+<li>--prefer-source</li>
+</ul></li>
+<li>composer:dumpautoload Call <code>composer dumpautoload</code>
+<ul>
+<li>--optimize|-o: Pass --optimize to composer</li>
+<li>--no-dev: Pass --no-dev</li>
+<li>--working-dir|-d: If specified, use the given directory as working directory.</li>
+<li>--no-interaction|-n: Do not ask any interactive question</li>
+</ul></li>
+</ul>
+<h2>droid-bower (existing repo, needs more commands)</h2>
+<ul>
+<li>bower:install Call <code>bower install</code> (exists, but needs more args+options)
+<ul>
+<li>--allow-root: pass --allow-root to bower</li>
+<li>--production|-p: Do not install project devDependencies</li>
+<li>--force-latest|-F: Force latest version on conflict</li>
+<li>--force|-f: Makes various commands more forceful</li>
+</ul></li>
+<li>bower:update Call <code>bower update</code>
+<ul>
+<li>--production|-p: Do not install project devDependencies</li>
+<li>--force-latest|-F: Force latest version on conflict</li>
+</ul></li>
+</ul>
+<h2>droid-ssh: (existing repo, needs more commands)</h2>
+<ul>
+<li>scp:put Use \phpseclib\Net\SCP::put to upload a file Add all arguments and flags from ssh:exec (simply extend from BaseSshCommand)
+<ul>
+<li>src: source filename</li>
+<li>dst: destination filename</li>
+<li>--no-interaction|-n: Do not ask any interactive question</li>
+</ul></li>
+<li>scp:get Use \phpseclib\Net\SCP::get to upload a file Add all arguments and flags from ssh:exec (simply extend from BaseSshCommand)
+<ul>
+<li>src: source filename</li>
+<li>dst: destination filename</li>
+<li>--no-interaction|-n: Do not ask any interactive question</li>
+</ul></li>
+</ul>
+<h2>droid-hipchat</h2>
+<p>Use <a href="https://github.com/hipchat/hipchat-php">https://github.com/hipchat/hipchat-php</a> Works with <a href="http://api.hipchat.com/docs/api/method/rooms/message">http://api.hipchat.com/docs/api/method/rooms/message</a> </p>
+<ul>
+<li>hipchat:message Send a hipchat message
+<ul>
+<li>message: message contents to send</li>
+<li>--token</li>
+<li>--room: Id or name of the room</li>
+<li>--notify: Marks the message as a notification</li>
+<li>--format: text or html, defaults to html</li>
+<li>--color: Background color for message. One of &quot;yellow&quot;, &quot;red&quot;, &quot;green&quot;, &quot;purple&quot;, &quot;gray&quot;, or &quot;random&quot;. (default: yellow)</li>
+</ul></li>
+</ul>
+<h2>droid-slack</h2>
+<p>Use <a href="https://github.com/maknz/slack">https://github.com/maknz/slack</a>  Check the README.md for options, descriptions and defaults.</p>
+<ul>
+<li>slack:message Send a Slack message
+<ul>
+<li>message: message contents to send</li>
+<li>--endpoint: </li>
+<li>--username: the default username that messages will be sent from</li>
+<li>--icon: the default icon messages will be sent with, either :emoji: or a URL to an image</li>
+<li>...any other options the slack library takes in <code>settings</code>.</li>
+</ul></li>
+</ul>
+<h2>droid-objectstorage</h2>
+<p>Use github.com/linkorb/objectstorage. Use 2.0 IMPORTANT: Don’t use the ObjectStorage\Utils class. It will be removed.</p>
+<ul>
+<li>
+<p>objectstorage:upload Uploads a file to object storage</p>
+<ul>
+<li>source: Local file to upload</li>
+<li>destination: remote filename</li>
+<li>--storage: s3, gridfs, pdo or file </li>
+<li>--s3-bucket: bucket name in case of s3 adapter</li>
+<li>--s3-access-key: Access key</li>
+<li>--s3-secret-key: Secret key</li>
+<li>--pdo-connection: PDO connection string, see droid-db for details</li>
+<li>--pdo-tablename: tablename to use</li>
+<li>--file-path: Path in case of --storage <code>file</code></li>
+<li>--encryption-key: key to use for EncryptionAdapter</li>
+<li>--encryption-iv: initialization vector to use for EncryptionAdapter</li>
+<li>--gridfs-server: connection string for gridfs</li>
+<li>--gridfs-db</li>
+<li>--bzip2-level: level to use for Bzip2Adapter</li>
+</ul>
+</li>
+<li>objectstorage:download Downloads a file from object storage
+<ul>
+<li>source: Remote filename to download</li>
+<li>destination: Local filename to download</li>
+<li>--storage: s3, gridfs, pdo or file </li>
+<li>--s3-bucket: bucket name in case of s3 adapter</li>
+<li>--s3-access-key: Access key</li>
+<li>--s3-secret-key: Secret key</li>
+<li>--pdo-connection: PDO connection string, see droid-db for details</li>
+<li>--pdo-tablename: tablename to use</li>
+<li>--file-path: Path in case of --storage <code>file</code></li>
+<li>--encryption-key: key to use for EncryptionAdapter</li>
+<li>--encryption-iv: initialization vector to use for EncryptionAdapter</li>
+<li>--gridfs-server: connection string for gridfs</li>
+<li>--gridfs-db</li>
+<li>--bzip2-level: level to use for Bzip2Adapter</li>
+</ul></li>
+</ul>
+<h1>droid-apt (TODO: needs more detailed requirements):</h1>
+<ul>
+<li>apt:install
+<ul>
+<li>packages: packages to download with <code>apt-get install</code>, possibly multiple (apache2, mysql-server)</li>
+</ul></li>
+<li>apt:update run apt-get update</li>
+<li>apt:key-add: Add an apt-key</li>
+<li>apt:repository-add: Adds an apt repo</li>
+</ul>
+<h2>droid-brew: (TODO: needs more detailed requirements):</h2>
+<h2>droid-docker (TODO)</h2>
+<p>Select best PHP library, and use library where possible, shell out to console when needed. Decide what to do with helpers like docker-compose etc.</p>
+<h2>droid-herald</h2>
+<h2>droid-smtp</h2>
+<h2>droid-xtheme</h2>
+<h2>droid-bluecode</h2>
+<h2>droid-blazon</h2>
+<h2>droid-bisight</h2>
+<h2>droid-sms</h2>
+<h2>droid-libcloud</h2>
+<p>Provision, start/stop, etc</p>
+<h2>droid-mailchimp</h2>
+<p>Mailchimp:pushlist csv?</p>
+                                </div>
+        <div class="col-md-2">
+        </div>
+    </div>
+</div>
+
+
+<footer id="footer" class="jumbotron">
+	<section class="container">
+		<div class="row">
+				<div class="col-md-5 col-md-push-1">
+										<a class="addthis_button_github" href="http://github.com/droid-php" target="_blank"></a>
+				</div>
+				<div class="col-md-5 col-md-push-1">
+					<h2>Droid is open-source</h2>
+					<p>You can use Droid in your projects and for your server configuration management for free.
+                    You can easily extend it's functionality through plugins, and use plugins of others.</p>
+					<p>For further details, check out <a href="https://github.com/droid-php/">github.com/droid-php</a></p>
+				</div>
+		</div>	
+	</section>
+</footer>
+
+<p class="small text-muted text-center">
+	Copyright &copy; 2016, <a target="_blank" href="http://www.linkorb.com/">LinkORB</a>. Powered by <a target="_blank" href="http://github.com/linkorb/blazon">Blazon static site generator</a><br />
+
+	This documentation is open source, and managed on <a href="http://github.com/droid-php/documentation">github.com/droid-php/website</a><br />
+
+	If you'd like to enhance these pages or add corrections, we'd welcome you to fork this repository, and send us a pull-request with 
+	your proposed changes.
+
+</p>
+
+<br>
+
+<!-- JavaScript libs are placed at the end of the document so the pages load faster -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.2.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script src="/assets/script.js"></script>
+
+</body>
+</html>

@@ -19,12 +19,16 @@
     .header {
         background: linear-gradient(to bottom, #405080 0%,#203040 100%) !important;
     }
-    .navbar {
+    .navbar, .dropdown-menu, .navbar-default .navbar-nav>.open>a, .dropdown-menu>li>a {
         margin-bottom: 0px !important;
         background-color: #203040 !important;
         border-radius: 0px !important;
         border: 0px none !important;
     }
+    .navbar, .dropdown-menu, .navbar-default .navbar-nav>.open>a, .dropdown-menu>li>a:hover {
+		color: #D87563 !important;
+	}
+
     .navbar li a, .navbar a.navbar-brand {
         color: #ffffff !important;
     }
@@ -36,6 +40,10 @@
         padding: 5px;
         color: #ffffff !important;
     }
+	
+	.btn {
+		color: #ffffff !important;
+	}
     
     /* make sidebar nav vertical */ 
     @media (min-width: 768px) {
@@ -62,6 +70,12 @@
         padding-bottom: 12px;
       }
     }
+	#footer {
+		margin-top: 20px;
+	}
+	.btn {
+		margin-bottom: 20px;
+	}
     </style>
 
 	<!--[if lt IE 9]> <script src="assets/js/html5shiv.js"></script> <![endif]-->
@@ -83,69 +97,51 @@
       <div id="navbar" class="navbar-collapse collapse">
         <ul class="nav navbar-nav navbar-right">
           <li><a href="/">Home</a></li>
-          <li><a href="/documentation">Documentation</a></li>
+          <li class="dropdown">
+			  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Configuration <b class="caret"></b></a>
+			  <ul class="dropdown-menu">
+				  <li><a href="/droid-yml">Configuring Droid with droid.yml</a></li>
+				  <li><a href="/targets">Tasks and targets</a></li>
+				  <li><a href="/inventory">Remote tasks with inventories</a></li>
+			  </ul>
+		  </li>
+          <li class="dropdown">
+			  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Developers <b class="caret"></b></a>
+			  <ul class="dropdown-menu">
+				  <li><a href="/plugin-overview">Extending Droid with Plugins</a></li>
+			  </ul>
+		  </li>
           <li><a href="/commands">Command index</a></li>
-          <li><a class="cta" href="/getting-started">Getting started</a></li>
+          <li class="dropdown">
+			  <a href="#" class="dropdown-toggle cta" data-toggle="dropdown">Getting started <b class="caret"></b></a>
+			  <ul class="dropdown-menu">
+				  <li><a href="/installation">Installation</a></li>
+				  <li><a href="/usage">Using Droid</a></li>
+				  <li><a href="/terminology">Terminology</a></li>
+			  </ul>
+		  </li>
         </ul>
       </div><!--/.nav-collapse -->
     </div><!--/.container-fluid -->
   </nav>
 <div class="container">
     <div class="row">
-        <div class="col-md-3">
-            
-            <div class="sidebar-nav">
-              <div class="navbar navbar-default" role="navigation">
-                <div class="navbar-header">
-                  <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-navbar-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                  </button>
-                  <span class="visible-xs navbar-brand">Documentation</span>
-                </div>
-                <div class="navbar-collapse collapse sidebar-navbar-collapse">
-                  <ul class="nav navbar-nav">
-                    <li><a href="/installation">Installation</a></li>
-                    <li><a href="/getting-started">Getting started</a></li>
-                                        <li><a href="/droid-yml">Automating build, test and deploy<br /><i>droid.yml</i></a></li>
-                    <li><a href="/droid-inventory-yml">Remote tasks with inventories<br /><i>droid-inventory.yml</i></a></li>
-                    <li><a href="/commands">Command index</a></li>
-                    <li><a href="/terminology">Terminology</a></li>
-                  </ul>
-                </div><!--/.nav-collapse -->
-              </div>
-          </div>
-      
+        <div class="col-md-2">
         </div>
-        <div class="col-md-9">
+        <div class="col-md-8">
             <h1>Automate your projects with droid.yml files</h1>
-<p>In the previous chapters, you've seen how you can use Droid to perform ad-hoc commands.</p>
-<p>While this is cool, the real power of Droid comes when you chain these commands for automation.</p>
+<p>In the <a href="usage">previous steps</a>, you've seen how you can use Droid to perform ad-hoc commands.</p>
+<p>While this is cool, the real power of Droid comes when configure it for automation.</p>
+<h2>droid.yml</h2>
 <p>When you start droid, it looks for a <code>droid.yml</code> file in your project directory.</p>
-<p>The <code>droid.yml</code> file allows you to define a set of <strong>targets</strong> that contain a sequence of tasks to perform.</p>
-<p>This will allow you to type something like <code>droid build</code>, instructing Droid to</p>
-<ul>
-<li>Download your project dependencies</li>
-<li>Download and compile assets</li>
-<li>Compress and minify images, scripts and stylesheets</li>
-<li>...etc</li>
-</ul>
-<p>All in a <strong>single command</strong>!</p>
-<h2>Simple <code>droid.yml</code> file</h2>
-<p>Here's a simple example of a <code>droid.yml</code> file:</p>
-<pre><code class="language-yml">targets:
-    mybuild:
-        tasks:
-            - name: Install composer dependencies
-              "composer:install": prefer=dist
-            - name: Install bower dependencies
-              "bower:install": ~</code></pre>
-<p>To run the <code>mybuild</code> target, simply run:</p>
-<pre><code class="language-sh">$ droid mybuild</code></pre>
-<p>This will install both the composer and bower dependencies of your project.</p>
+<p>Optionally, you can specify an alternative configuration file using <code>--droid-config</code>. For example:</p>
+<pre><code>droid --droid-config=/etc/my-droid-file.yml</code></pre>
+<p>The config file allows you to <a href="targets">define targets</a> and <a href="inventory">define inventory</a></p>
+<center><a href="/targets" class="btn btn-lg btn-success">Automation with targets</a></center>
+<center><a href="/inventory" class="btn btn-lg btn-success">Remote management with inventory</a></center>
                                 </div>
+        <div class="col-md-2">
+        </div>
     </div>
 </div>
 
@@ -166,7 +162,16 @@
 	</section>
 </footer>
 
-<p class="small text-muted text-center">Copyright &copy; 2016, <a target="_blank" href="http://www.linkorb.com/">LinkORB</a>. Powered by <a target="_blank" href="http://github.com/linkorb/blazon">Blazon static site generator</a></p>
+<p class="small text-muted text-center">
+	Copyright &copy; 2016, <a target="_blank" href="http://www.linkorb.com/">LinkORB</a>. Powered by <a target="_blank" href="http://github.com/linkorb/blazon">Blazon static site generator</a><br />
+
+	This documentation is open source, and managed on <a href="http://github.com/droid-php/documentation">github.com/droid-php/website</a><br />
+
+	If you'd like to enhance these pages or add corrections, we'd welcome you to fork this repository, and send us a pull-request with 
+	your proposed changes.
+
+</p>
+
 <br>
 
 <!-- JavaScript libs are placed at the end of the document so the pages load faster -->

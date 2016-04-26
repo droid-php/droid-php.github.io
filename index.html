@@ -19,12 +19,16 @@
     .header {
         background: linear-gradient(to bottom, #405080 0%,#203040 100%) !important;
     }
-    .navbar {
+    .navbar, .dropdown-menu, .navbar-default .navbar-nav>.open>a, .dropdown-menu>li>a {
         margin-bottom: 0px !important;
         background-color: #203040 !important;
         border-radius: 0px !important;
         border: 0px none !important;
     }
+    .navbar, .dropdown-menu, .navbar-default .navbar-nav>.open>a, .dropdown-menu>li>a:hover {
+		color: #D87563 !important;
+	}
+
     .navbar li a, .navbar a.navbar-brand {
         color: #ffffff !important;
     }
@@ -36,6 +40,10 @@
         padding: 5px;
         color: #ffffff !important;
     }
+	
+	.btn {
+		color: #ffffff !important;
+	}
     
     /* make sidebar nav vertical */ 
     @media (min-width: 768px) {
@@ -62,6 +70,12 @@
         padding-bottom: 12px;
       }
     }
+	#footer {
+		margin-top: 20px;
+	}
+	.btn {
+		margin-bottom: 20px;
+	}
     </style>
 
 	<!--[if lt IE 9]> <script src="assets/js/html5shiv.js"></script> <![endif]-->
@@ -83,9 +97,29 @@
       <div id="navbar" class="navbar-collapse collapse">
         <ul class="nav navbar-nav navbar-right">
           <li><a href="/">Home</a></li>
-          <li><a href="/documentation">Documentation</a></li>
+          <li class="dropdown">
+			  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Configuration <b class="caret"></b></a>
+			  <ul class="dropdown-menu">
+				  <li><a href="/droid-yml">Configuring Droid with droid.yml</a></li>
+				  <li><a href="/targets">Tasks and targets</a></li>
+				  <li><a href="/inventory">Remote tasks with inventories</a></li>
+			  </ul>
+		  </li>
+          <li class="dropdown">
+			  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Developers <b class="caret"></b></a>
+			  <ul class="dropdown-menu">
+				  <li><a href="/plugin-overview">Extending Droid with Plugins</a></li>
+			  </ul>
+		  </li>
           <li><a href="/commands">Command index</a></li>
-          <li><a class="cta" href="/getting-started">Getting started</a></li>
+          <li class="dropdown">
+			  <a href="#" class="dropdown-toggle cta" data-toggle="dropdown">Getting started <b class="caret"></b></a>
+			  <ul class="dropdown-menu">
+				  <li><a href="/installation">Installation</a></li>
+				  <li><a href="/usage">Using Droid</a></li>
+				  <li><a href="/terminology">Terminology</a></li>
+			  </ul>
+		  </li>
         </ul>
       </div><!--/.nav-collapse -->
     </div><!--/.container-fluid -->
@@ -137,7 +171,7 @@
                     Management tool, much like Ansible, Puppet or Chef. But much simpler, and easier to extend.
                 </p>
                 <center>
-                    <a href="/getting-started" class="btn btn-success btn-lg" style="color: #ffffff">Getting started</a>
+                    <a href="/usage" class="btn btn-success btn-lg" style="color: #ffffff">Getting started</a>
                 </center>
 			</div>
 		</div>
@@ -164,7 +198,16 @@
 	</section>
 </footer>
 
-<p class="small text-muted text-center">Copyright &copy; 2016, <a target="_blank" href="http://www.linkorb.com/">LinkORB</a>. Powered by <a target="_blank" href="http://github.com/linkorb/blazon">Blazon static site generator</a></p>
+<p class="small text-muted text-center">
+	Copyright &copy; 2016, <a target="_blank" href="http://www.linkorb.com/">LinkORB</a>. Powered by <a target="_blank" href="http://github.com/linkorb/blazon">Blazon static site generator</a><br />
+
+	This documentation is open source, and managed on <a href="http://github.com/droid-php/documentation">github.com/droid-php/website</a><br />
+
+	If you'd like to enhance these pages or add corrections, we'd welcome you to fork this repository, and send us a pull-request with 
+	your proposed changes.
+
+</p>
+
 <br>
 
 <!-- JavaScript libs are placed at the end of the document so the pages load faster -->
