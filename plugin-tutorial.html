@@ -192,6 +192,8 @@ $application = new Application('Droid FooBar', '1.0.0');
 $application-&gt;setCatchExceptions(true);
 $application-&gt;add(new Acme\Droid\Plugin\FooBar\Command\FooBarHelloCommand());
 $application-&gt;run();</code></pre>
+<p>Make the <code>bin/droid-foobar</code> file executable:</p>
+<pre><code>chmod 755 bin/droid-foobar</code></pre>
 <h2>Create the actual command (FooBarHelloCommand)</h2>
 <p>In the root of your project, create a directory called <code>src/</code> and in there a directory called <code>Command/</code>.</p>
 <p>Next, create a file called <code>src/Command/FooBarHelloCommand.php</code> with the following contents:</p>
