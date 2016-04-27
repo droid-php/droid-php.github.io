@@ -159,35 +159,8 @@ We can help to create new repositories when needed.</p>
 <li>filename: filename to save</li>
 </ul></li>
 </ul>
-<h2>droid-service</h2>
-<ul>
-<li>service:start
-<ul>
-<li>name: service name</li>
-</ul></li>
-<li>service:stop
-<ul>
-<li>name: service name</li>
-</ul></li>
-<li>service:reload
-<ul>
-<li>name: service name</li>
-</ul></li>
-<li>service:restart
-<ul>
-<li>name: service name</li>
-</ul></li>
-</ul>
 <h2>droid-fs (existing repo, needs more commands)</h2>
 <ul>
-<li>fs:copy Copy a single file (#505)
-<ul>
-<li>src: source filename</li>
-<li>dst: destination filename</li>
-<li>--owner: name of the owner of the copied directory (like <code>chown</code>)</li>
-<li>--group: name of the group of the copied directory (like <code>chgrp</code>)</li>
-<li>--filemask: file permission mask (like 0640 - use octdec etc)</li>
-</ul></li>
 <li>fs:rename Move/rename a file or directory to another place
 <ul>
 <li>src: source file or directory to move</li>
@@ -215,34 +188,6 @@ We can help to create new repositories when needed.</p>
 <li>src: source file or directory to move</li>
 <li>dst: destination to move it to</li>
 <li>--force:f: If the target file already exists, then unlink it so that the link may occur.</li>
-</ul></li>
-</ul>
-<h2>droid-mysql</h2>
-<ul>
-<li>
-<p>mysql:dump Calls mysqldump through exec. For connection string, use <code>parse_url</code> like this: <a href="https://github.com/Radvance/Radvance/blob/master/src/Framework/BaseConsoleApplication.php#L123">https://github.com/Radvance/Radvance/blob/master/src/Framework/BaseConsoleApplication.php#L123</a></p>
-<ul>
-<li>connection: connection string like mysql://username:password@host:port/dbname</li>
-<li>destination: destination filename</li>
-<li>--gzip|-g: gzip the output file (by piping mysqldump through gzip)</li>
-<li>--bzip2|-b: bzip2 the output file (by piping mysqldump through bzip2)</li>
-<li>--compress|-C: Pass --compress to mysqldump: Compress all information sent between the client and the server if both support compression.</li>
-<li>--force|-f: Pass --force to mysqldump: Continue even if an SQL error occurs during a table dump</li>
-<li>--ignore-tables: csv of tablenames to ignore, pass as individual --ignore-table= flags to mysqldump. Example: <code>--ignore-tables=”user, log, bla”</code></li>
-<li>--disable-keys|-K: pass --disable-keys to mysqldump: This makes loading the dump file faster because the indexes are created after all rows are inserted.</li>
-<li>--quick|-q: This option is useful for dumping large tables. It forces mysqldump to retrieve rows for a table from the server a row at a time rather than retrieving the entire row set and buffering it in memory before writing it out.</li>
-<li>--add-locks: This results in faster inserts when the dump file is reloaded.</li>
-<li>--lock-all-tables|-x: Lock all tables across all databases. This is achieved by acquiring a global read lock for the duration of the whole dump.</li>
-<li>--lock-tables|-l: For each dumped database, lock all tables to be dumped before dumping them. The tables are locked with READ LOCAL to permit concurrent inserts in the case of MyISAM tables.</li>
-<li>--single-transaction: Dumps the consistent state of the database at the time when START TRANSACTION was issued without blocking any applications.</li>
-</ul>
-</li>
-<li>mysql:load Loads a mysqldump
-<ul>
-<li>connection: connection string like mysql://username:password@host:port/dbname</li>
-<li>source: dump filename</li>
-<li>--gzip|-g: gzip the source file (by piping mysql through gzip)</li>
-<li>--bzip2|-b: bzip2 the source file (by piping mysql through bzip2)</li>
 </ul></li>
 </ul>
 <h2>droid-db (using PDO)</h2>
@@ -323,19 +268,6 @@ We can help to create new repositories when needed.</p>
 <li>--no-interaction|-n: Do not ask any interactive question</li>
 </ul></li>
 </ul>
-<h2>droid-hipchat</h2>
-<p>Use <a href="https://github.com/hipchat/hipchat-php">https://github.com/hipchat/hipchat-php</a> Works with <a href="http://api.hipchat.com/docs/api/method/rooms/message">http://api.hipchat.com/docs/api/method/rooms/message</a> </p>
-<ul>
-<li>hipchat:message Send a hipchat message
-<ul>
-<li>message: message contents to send</li>
-<li>--token</li>
-<li>--room: Id or name of the room</li>
-<li>--notify: Marks the message as a notification</li>
-<li>--format: text or html, defaults to html</li>
-<li>--color: Background color for message. One of &quot;yellow&quot;, &quot;red&quot;, &quot;green&quot;, &quot;purple&quot;, &quot;gray&quot;, or &quot;random&quot;. (default: yellow)</li>
-</ul></li>
-</ul>
 <h2>droid-slack</h2>
 <p>Use <a href="https://github.com/maknz/slack">https://github.com/maknz/slack</a>  Check the README.md for options, descriptions and defaults.</p>
 <ul>
@@ -388,17 +320,11 @@ We can help to create new repositories when needed.</p>
 <li>--bzip2-level: level to use for Bzip2Adapter</li>
 </ul></li>
 </ul>
-<h1>droid-apt (TODO: needs more detailed requirements):</h1>
+<h1>droid-apt (TODO: needs more commands for keys and repositories):</h1>
 <ul>
-<li>apt:install
-<ul>
-<li>packages: packages to download with <code>apt-get install</code>, possibly multiple (apache2, mysql-server)</li>
-</ul></li>
-<li>apt:update run apt-get update</li>
 <li>apt:key-add: Add an apt-key</li>
 <li>apt:repository-add: Adds an apt repo</li>
 </ul>
-<h2>droid-brew: (TODO: needs more detailed requirements):</h2>
 <h2>droid-docker (TODO)</h2>
 <p>Select best PHP library, and use library where possible, shell out to console when needed. Decide what to do with helpers like docker-compose etc.</p>
 <h2>droid-herald</h2>
