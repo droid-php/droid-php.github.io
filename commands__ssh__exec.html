@@ -141,8 +141,9 @@
 
     <h3>Arguments</h3>
     <ul>
-            <li><code>hostname</code>: Hostname</li>
+            <li><code>hostname</code>: Host name, alias or IP address</li>
             <li><code>cmd</code>: Command to execute on the remote host</li>
+            <li><code>args</code>: Command arguments</li>
         </ul>
     <h3>Options</h3>
     <ul>
@@ -150,15 +151,13 @@
         </li>
             <li><code>--username</code>: Login as username
         </li>
-            <li><code>--password</code>: Use password based authentication
+            <li><code>--keyfile</code>: Path to private key file
         </li>
-            <li><code>--timeout</code>: Timeout in seconds, defaults to 1
+            <li><code>--password</code>: Force password based authentication
         </li>
-            <li><code>--agent</code>: Enable ssh-agent authentication
+            <li><code>--timeout</code>: Connect timeout in seconds
         </li>
-            <li><code>--keyfile</code>: Use ssh-key filename
-        </li>
-            <li><code>--passphrase</code>: Use passphrase for keyfile
+            <li><code>--proxy</code>: Command to use to connect to the server via a proxy. See ProxyCommand in the Manual page ssh_config(5).
         </li>
         </ul>
 
