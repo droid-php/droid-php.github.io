@@ -1,0 +1,360 @@
+<html>
+<head>
+<title>Command Plugins - Droid PHP</title>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/flatly/bootstrap.min.css" rel="stylesheet" integrity="sha384-+ENW/yibaokMnme+vBLnHMphUYxHs34h9lpdbSLuAwGkOKFRl4C34WkjazBtb7eT" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/styles/monokai.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/languages/yaml.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/languages/php.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body>
+    <div class="container-fluid">
+    <div class="row">
+        <div class="col-md-3">
+            <h1>Navigation</h1>
+
+<ul>
+    <li><a href="/index.html">Home</a></li>
+    <li><a href="/getting-started.html">Getting started</a></li>
+    <li><a href="/task-arguments-and-variables.html" title="Task Arguments and Variables">Task Arguments and Variables</a></li>
+    <li><a href="/enable-remote-command-execution.html" title="Enable Remote Command Execution">Enable remote command execution</a></li>
+    <li><a href="/configuration-reference/index.html" title="Configuration Reference">Configuration reference</a>
+        <ul>
+            <li><a href="/configuration-reference/project.html" title="Project Configuration">Project</a></li>
+            <li><a href="/configuration-reference/target.html" title="Target Configuration">Target</a></li>
+            <li><a href="/configuration-reference/task.html" title="Task Configuration">Task</a></li>
+            <li><a href="/configuration-reference/host.html" title="Host Configuration">Host</a></li>
+            <li><a href="/configuration-reference/group.html" title="Group Configuration">Group</a></li>
+            <li><a href="/configuration-reference/firewall-rule.html" title="Firewall Rule Configuration">Firewall Rule</a></li>
+            <li><a href="/configuration-reference/module.html" title="Module Configuration">Module</a></li>
+        </ul>
+    </li>
+    <li><a href="/modules.html" title="Modules">Modules - reusable Task lists</a></li>
+    <li><a href="/command-reference/index.html" title="Command Reference">Command Reference</a></li>
+    <li><a href="/command-plugins.html" title="Command Plugins">Command Plugins</a></li>
+    <li><a href="/hacking.html" title="Hacking - Contributor&apos;s Guide">Hacking</a></li>
+</ul>
+    
+        </div>
+        <div class="col-md-6">
+                        <h1>Command Plugins</h1>
+<p>Commands are made available for use with Droid through Command Plugins.  A
+Plugin is a package of Commands under a common namespace.  For example, the
+<code>droid-mysql</code> Plugin package provides a number of Commands in the <code>mysql</code>
+namespace, including <code>mysql:dump</code> and <code>mysql:load</code>.</p>
+<p>This document shows how to create a Command Plugin and a Command; how to make
+the Plugin available to Droid during the development of a Command; and finally
+how to publish the Plugin so that the Command is made available for remote
+execution as part of a Droid project.</p>
+<h2>Prepare a new Command Plugin</h2>
+<p>The <a href="/command-reference/generate__plugin.html" title="Command `generate:plugin`">Plugin Generation Command</a> may be used to kick-start
+the development of a Command Plugin: it populates a specified folder to form
+self-contained project.</p>
+<p>We begin by creating a basic Droid Project which will make use of our Command
+Plugin:-</p>
+<pre><code class="language-shell">$ cd /path/to/projects
+$ mkdir myproject
+$ cd myproject
+$ composer init -n &amp;&amp; composer require droid/droid
+$ echo 'name: "A basic Droid Project"' &gt; droid.yml
+$ cd ..</code></pre>
+<p>We create a skeleton Command Plugin project which we shall give the name
+&quot;chuck-norris&quot; - this will be the namespace of the Plugin's Commands:-</p>
+<pre><code class="language-shell">$ mkdir chuck-norris
+$ myproject/vendor/bin/droid generate:plugin chuck-norris
+Generating: chuck-norris in /path/to/projects/chuck-norris
+$ cd chuck-norris &amp;&amp; composer install</code></pre>
+<p>The <code>chuck-norris</code> folder now contains all that we need for developing Commands
+for the Plugin.</p>
+<p>The last of our preparatory steps is make the new Plugin available to our basic
+Droid Project.  For this, we will use <a href="https://github.com/linkorb/autotune" title="AutoTune for Composer - For PHP Library Developers">Autotune</a> to give the Droid
+project the ability to autoload our Plugin:-</p>
+<pre><code class="language-shell">$ cd /path/to/projects/myproject
+$ touch autotune.json</code></pre>
+<p>We add the following content to the <code>autotune.json</code>:-</p>
+<pre><code class="language-json">{
+  "autoload": {
+    "psr-4": {
+      "Droid\\Plugin\\ChuckNorris\\": "/path/to/projects/chuck-norris/src"
+    }
+  }
+}</code></pre>
+<p>And our Droid project is now able to load the chuck-norris Plugin and list and
+execute its Commands:-</p>
+<pre><code class="language-shell">$ vendor/bin/droid list chuck-norris
+...
+Available commands for the "chuck-norris" namespace:
+  chuck-norris:example  This is an example command</code></pre>
+<p>The skeleton Plugin includes an example Command <code>chuck-norris:example</code> which we
+can use as the starting point for further development.</p>
+<h2>Create a Droid Command</h2>
+<p>We shall create a Droid Command the purpose of which shall be to set-up a
+Message Of The Day (MOTD) on a Host.  It will:-</p>
+<ul>
+<li>fetch a random Chuck Norris joke from <a href="http://www.icndb.com/" title="The Internet Chuck Norris Database">The Internet Chuck Norris
+Database</a>, using <a href="http://www.icndb.com/api/" title="API | The Internet Chuck Norris Database">its API</a>.</li>
+<li>write the joke to <code>/etc/motd</code>, overwriting any previous MOTD.</li>
+<li>provide an optional argument to allow the the MOTD to be written to any
+alternative file.</li>
+</ul>
+<p>A suitable name for our Command might be <code>jotd</code>.  By convention, the PHP class
+name will be <code>ChuckNorrisJotdCommand</code>, that is, the Command namespace
+<code>chuck-norris</code>, title case, followed by the Command name <code>jotd</code>, also title
+case, followed by <code>Command</code>.</p>
+<p>We make a copy of the example Command:-</p>
+<pre><code class="language-shell">$ cd /path/to/projects/chuck-norris
+$ cp src/Command/ChuckNorrisExampleCommand.php src/Command/ChuckNorrisJotdCommand.php</code></pre>
+<p>Next, edit the <code>ChuckNorrisJotdCommand.php</code> file to look like the following:-</p>
+<pre><code class="language-php">&lt;?php
+
+// src/Command/ChuckNorrisJotdCommand.php
+
+namespace Droid\Plugin\ChuckNorris\Command;
+
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+
+class ChuckNorrisJotdCommand extends Command
+{
+    public function configure()
+    {
+        $this
+            -&gt;setName('chuck-norris:jotd')
+            -&gt;setDescription('Install a Chuck Norris Joke of the Day')
+            -&gt;addArgument(
+                'file',
+                InputArgument::OPTIONAL,
+                'Write the JotD to this file',
+                '/etc/motd'
+            )
+        ;
+    }
+
+    public function execute(InputInterface $input, OutputInterface $output)
+    {
+        $raw = file_get_contents('http://api.icndb.com/jokes/random/');
+        if ($raw === false) {
+            $output-&gt;writeln(
+                'Did not get a sensible response from api.icndb.com'
+            );
+            return;
+        }
+
+        $response = json_decode($raw, true);
+        if ($response === null
+            || ! array_key_exists('type', $response)
+            || $response['type'] !== 'success'
+            || ! array_key_exists('value', $response)
+            || ! array_key_exists('joke', $response['value'])
+        ) {
+            $output-&gt;writeln(
+                'Did not get a well-formed json response from api.icndb.com'
+            );
+            return;
+        }
+
+        $result = file_put_contents(
+            $input-&gt;getArgument('file'),
+            html_entity_decode($response['value']['joke']) . PHP_EOL
+        );
+
+        if ($result === false) {
+            $output-&gt;writeln('Failed to write to the &lt;file&gt;.');
+            return;
+        }
+
+        $output-&gt;writeln('Successfully wrote to the &lt;file&gt;.');
+    }
+}</code></pre>
+<p>We have:-</p>
+<ul>
+<li>changed the PHP class name: <code>ChuckNorrisJotdCommand</code></li>
+<li>configured the Command, in the <code>configure</code> method, to set the name of the
+Command <code>chuck-norris:jotd</code> and provide a description</li>
+<li>configured the Command to accept an optional argument <code>file</code> which will take
+the default value <code>/etc/motd</code></li>
+<li>populated the <code>execute</code> method with the code to be executed: it will make an
+API request and write a joke, if successfully obtained, to the file indicated
+by the <code>file</code> argument.</li>
+</ul>
+<p>Our Command is now complete.  We must now register it with the Plugin.  The
+<code>src/DroidPlugin.php</code> contains the main Plugin class <code>DroidProject</code>.  Its
+method <code>getCommands</code> is called by the Droid Console Application which expects a
+list of Command objects.  We modify the <code>getCommands</code> method to create an
+instance of our Command and add it to the list of objects to be returned by the
+method:-</p>
+<pre><code class="language-php">&lt;?php
+
+//src/DroidPlugin.php
+
+namespace Droid\Plugin\ChuckNorris;
+
+use Droid\Plugin\ChuckNorris\Command\ChuckNorrisExampleCommand;
+use Droid\Plugin\ChuckNorris\Command\ChuckNorrisJotdCommand;
+
+class DroidPlugin
+{
+    public function __construct($droid)
+    {
+        $this-&gt;droid = $droid;
+    }
+
+    public function getCommands()
+    {
+        $commands = [];
+        $commands[] = new ChuckNorrisExampleCommand();
+        $commands[] = new ChuckNorrisJotdCommand();
+        return $commands;
+    }
+}</code></pre>
+<p>In our basic Droid project, Droid should now have two Commands in the
+<code>chuck-norris</code> namespace:-</p>
+<pre><code class="language-shell">$ cd /path/to/myproject
+$ vendor/bin/droid list chuck-norris
+...
+Available commands for the "chuck-norris" namespace:
+  chuck-norris:example  This is an example command
+  chuck-norris:jotd     Install a Chuck Norris Joke of the Day
+</code></pre>
+<p>Our Command Plugin is now complete and its Commands are available to our basic
+Droid Project for execution the local host, either directly at the command line
+or as part of a Task.</p>
+<p>Next we shall publish the Command so that it may be executed on a remote Host.</p>
+<h2>Publish a Command</h2>
+<p>A Plugin must be published somewhere, accessible to <a href="https://getcomposer.org/" title="Composer: Dependency Manager for PHP">Composer</a>, in
+order that Droid may execute the Plugin's Commands on a remote Host.  Usually,
+a Droid Project will make use of Command Plugins published on
+<a href="https://packagist.org/" title="The PHP Package Repository">Packagist</a>, but for this example we will publish our Plugin at
+<a href="https://github.com" title="GitHub">GitHub</a> and Composer will be instructed to obtain it from GitHub by
+way of a <a href="https://getcomposer.org/doc/05-repositories.md#loading-a-package-from-a-vcs-repository" title="Loading a package from a VCS repository">custom repository</a>.</p>
+<p>The first thing to do is <a href="https://help.github.com/articles/create-a-repo/" title="Create A Repo">create a GitHub repository</a> for the
+Plugin.  We shall pretend that the repository has been created and its URL is:-</p>
+<p><code>https://github.com/someone/chuck-norris.git</code></p>
+<p>Next, we initialise the local git repository:-</p>
+<pre><code class="language-shell">$ cd /path/to/projects/chuck-norris
+$ git init
+$ git config user.name someone
+$ git config user.email someone@users.noreply.github.com
+$ git remote add origin https://github.com/someone/chuck-norris.git</code></pre>
+<p>We remove the <code>chuck-norris:example</code> Command from the Plugin so that it
+provides just the <code>chuck-norris:jotd</code> Command:-</p>
+<pre><code class="language-php">&lt;?php
+
+//src/DroidPlugin.php
+
+namespace Droid\Plugin\ChuckNorris;
+
+use Droid\Plugin\ChuckNorris\Command\ChuckNorrisJotdCommand;
+
+class DroidPlugin
+{
+    public function __construct($droid)
+    {
+        $this-&gt;droid = $droid;
+    }
+
+    public function getCommands()
+    {
+        $commands = [];
+        $commands[] = new ChuckNorrisJotdCommand();
+        return $commands;
+    }
+}</code></pre>
+<pre><code class="language-shell">$ rm src/Command/ChuckNorrisExampleCommand.php</code></pre>
+<p>Next, we provide some information about the Plugin's Command in its
+<code>README.md</code>:-</p>
+<pre><code class="language-markdown">Droid plugin: chuck-norris
+======================
+
+For more information on Droid, please check out [droidphp.com](http://droidphp.com)
+
+Provides the commands:-
+
+- `chuck-norris:jotd`: Install a Chuck Norris Joke of the Day</code></pre>
+<p>And we commit and publish our work:-</p>
+<pre><code class="language-shell">$ git add .
+$ git commit -m 'Add Droid plugin "chuck-norris".'
+$ git push -u origin master</code></pre>
+<p>Now that the Plugin is published, we can update our Droid Project to fetch the
+Plugin from GitHub.  We remove <code>autotune.json</code>:-</p>
+<pre><code class="language-shell">$ cd /path/to/projects/myproject
+$ rm autotune.json</code></pre>
+<p>add the remote git repository to the Project's <code>composer.json</code>:-</p>
+<pre><code class="language-json">{
+    "require": {
+        "droid/droid": "^1.20",
+        "droid/droid-chuck-norris": "dev-master as 1.0.x-dev"
+    },
+    "require-dev": {
+        "linkorb/autotune": "^1.2"
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/someone/chuck-norris.git"
+        }
+    ]
+}</code></pre>
+<p>We can now fetch the Plugin from GitHub, into our Droid Project:-</p>
+<pre><code class="language-shell">$ composer update droid/droid-chuck-norris
+$ vendor/bin/droid list chuck-norris
+...
+Available commands for the "chuck-norris" namespace:
+  chuck-norris:jotd     Install a Chuck Norris Joke of the Day</code></pre>
+<p>Our Command is now available for use both locally and on remote Hosts.</p>
+<p>Let's try it out.  We add a remote Host and a Target to our Droid's Project
+<code>droid.yml</code>:-</p>
+<pre><code class="language-yaml"># /path/to/projects/myproject/droid.yml
+project:
+    name: "A basic Droid Project"
+
+targets:
+    install_jotd:
+        hosts: "myhost"
+        tasks:
+            -
+              name: "Install Joke of the Day"
+              command: "chuck-norris:jotd"
+              sudo: true
+            -
+              name: "Display the installed Joke of the Day"
+              command: "shell:exec"
+              sudo: true
+              arguments:
+                  command-line: "head /etc/motd"
+
+hosts:
+    myhost:
+        droid_ip: "198.51.100.1"</code></pre>
+<p>Our Droid Project now requires the <code>droid/droid-shell</code> package because we have
+used the <code>shell:exec</code> Command in the second Task:-</p>
+<pre><code class="language-shell">$ composer require droid/droid-shell</code></pre>
+<p>We may execute the <code>install_jotd</code> Target:-</p>
+<pre><code class="language-shell">$ vendor/bin/droid install_jotd</code></pre>
+<p>We should see something like the following:-</p>
+<pre><code class="language-shell">Droid: Running target `install_jotd`
+Task `Install Joke of the Day`: chuck-norris:jotd on myhost
+Host myhost: file=/etc/motd
+myhost Begin droid enablement.
+myhost Finished droid enablement. Success.
+myhost Successfully wrote to the &lt;file&gt;.
+Task `Display the installed Joke of the Day`: shell:exec on myhost
+Host myhost: command-line=head /etc/motd
+myhost I have successfully executed the given command line.
+myhost Someone once tried to tell Chuck Norris that roundhouse kicks aren't the best way to kick someone. This has been recorded by historians as the worst mistake anyone has ever made.
+Result: 0
+--------------------------------------------</code></pre>
+<p>Our new Command Plugin was installed, directly from GitHb, to the remote Host
+and the <code>chuck-norris:jotd</code> Command was successfully executed.</p>
+                    </div>
+        <div class="col-md-3"></div>
+    </div>
+</div>
+
+</body>
+</html>

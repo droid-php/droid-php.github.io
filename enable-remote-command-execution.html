@@ -1,0 +1,201 @@
+<html>
+<head>
+<title>Enable Remote Command Execution - Droid PHP</title>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/flatly/bootstrap.min.css" rel="stylesheet" integrity="sha384-+ENW/yibaokMnme+vBLnHMphUYxHs34h9lpdbSLuAwGkOKFRl4C34WkjazBtb7eT" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/styles/monokai.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/languages/yaml.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/languages/php.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body>
+    <div class="container-fluid">
+    <div class="row">
+        <div class="col-md-3">
+            <h1>Navigation</h1>
+
+<ul>
+    <li><a href="/index.html">Home</a></li>
+    <li><a href="/getting-started.html">Getting started</a></li>
+    <li><a href="/task-arguments-and-variables.html" title="Task Arguments and Variables">Task Arguments and Variables</a></li>
+    <li><a href="/enable-remote-command-execution.html" title="Enable Remote Command Execution">Enable remote command execution</a></li>
+    <li><a href="/configuration-reference/index.html" title="Configuration Reference">Configuration reference</a>
+        <ul>
+            <li><a href="/configuration-reference/project.html" title="Project Configuration">Project</a></li>
+            <li><a href="/configuration-reference/target.html" title="Target Configuration">Target</a></li>
+            <li><a href="/configuration-reference/task.html" title="Task Configuration">Task</a></li>
+            <li><a href="/configuration-reference/host.html" title="Host Configuration">Host</a></li>
+            <li><a href="/configuration-reference/group.html" title="Group Configuration">Group</a></li>
+            <li><a href="/configuration-reference/firewall-rule.html" title="Firewall Rule Configuration">Firewall Rule</a></li>
+            <li><a href="/configuration-reference/module.html" title="Module Configuration">Module</a></li>
+        </ul>
+    </li>
+    <li><a href="/modules.html" title="Modules">Modules - reusable Task lists</a></li>
+    <li><a href="/command-reference/index.html" title="Command Reference">Command Reference</a></li>
+    <li><a href="/command-plugins.html" title="Command Plugins">Command Plugins</a></li>
+    <li><a href="/hacking.html" title="Hacking - Contributor&apos;s Guide">Hacking</a></li>
+</ul>
+    
+        </div>
+        <div class="col-md-6">
+                        <h1>Enable remote command execution</h1>
+<h2>Introduction</h2>
+<p>Droid reads Tasks from the Droid Project to execute Droid Commands either on
+the local host or on remote Hosts.  This page describes how Droid achieves
+remote execution and what steps are required to facilitate it.</p>
+<h3>Requirements of remote Hosts</h3>
+<p>To execute Droid Commands on a remote Host, Droid will install itself on the
+remote Host.  To achieve this Droid will copy the <code>composer.json</code> and
+<code>composer.lock</code> files from the Droid Project on the local host to the remote
+Host. Droid will then install Composer on the remote Host and, finally, will
+invoke <code>composer install</code> there.</p>
+<p>Thus, the remote Host must satisfy some conditions:-</p>
+<ul>
+<li>An SSH service must be running on the remote Host and accepting connections
+from the local host.</li>
+<li>A user account must exist on the remote Host, configured for SSH Public Key
+authentication.</li>
+<li>A PHP Command Line Interpreter (CLI) must be installed on the remote Host, at
+or above version 5.5.9.</li>
+<li>The remote Host must be able to access the Worldwide Web (both HTTP and
+HTTPS).</li>
+</ul>
+<p>Droid will install Composer and itself to <code>/usr/local/droid</code> on the remote Host
+if the user account has sufficient privileges; otherwise it will install to
+<code>/tmp</code>.  The former location is preferred over the latter because the
+installation will be lost when <code>/tmp</code> is cleared, as often happens when a Host
+is rebooted.</p>
+<p>Ideally then, the user account on the remote Host will have permissions to read
+and write <code>/usr/local/droid</code>.  A good way to achieve this is to create a
+dedicated user account on the remote Host, making <code>/usr/local/droid</code> its Home
+Directory:-</p>
+<pre><code class="language-shell">$ sudo adduser --disabled-password --gecos "Droid" --home "/usr/local/droid" "droid"</code></pre>
+<p>The user account may need to be able to execute commands with <code>sudo</code> and it
+must be able to do so without being required to provide a password.  One way to
+achieve this is to issue the following command on the remote Host:-</p>
+<pre><code class="language-shell">$ echo "droid ALL=(root) NOPASSWD:ALL" | sudo tee /etc/sudoers.d/droid</code></pre>
+<p>This will allow the <code>droid</code> user account to issue <code>sudo</code> with all commands
+without being required to provide a password.  It is recommended, however, that
+the user account be limited in the commands it can execute in this way.  An
+example of a more controlled <code>/etc/sudoers.d/droid</code> file might be:-</p>
+<pre><code class="language-text"># Sudoers for Droid
+Cmnd_Alias DROID_COMMANDS = /usr/bin/apt-get install,/bin/chown,/bin/chmod
+droid ALL=(root) NOPASSWD:DROID_COMMANDS</code></pre>
+<p>See the sudoers manual page (<code>man 5 sudoers</code>) for more information about the
+format of a sudoers file.</p>
+<h3>Requirements of the local host</h3>
+<p>In concert with the requirements of remote Hosts, Droid has some requirements
+of the local host:-</p>
+<ul>
+<li>A private SSH key must be available for authenticating Droid to the remote
+Host.</li>
+<li>The private SSH key should be registered with a local SSH Agent to avoid
+repeated prompts for the key's pass phrase during remote Command execution.</li>
+<li>The SSH Host key of the remote Host must be verified and recorded in the
+local database of known hosts.</li>
+</ul>
+<h2>Enable remote execution</h2>
+<p>In this section we will see exactly what steps to take to enable Droid to
+execute Commands on a remote Host.  We will not cover the installation of SSH
+server on the remote Host, nor how to obtain the fingerprint of the SSH Host
+key which identifies the Host.  We will assume that you have already done this
+and have verified the fingerprint.</p>
+<h3>Remote execution checklist</h3>
+<ul>
+<li>On the local host:-
+<ol>
+<li>generate an SSH key pair (public and private keys)</li>
+<li>register the private SSH key with the SSH Agent</li>
+<li>copy the public SSH key to the remote Host</li>
+</ol></li>
+<li>On the remote host:-
+<ol>
+<li>create a dedicated user account for Droid</li>
+<li>enable SSH public key authentication</li>
+<li>enable password-less Sudoing for the Droid user</li>
+<li>install PHP CLI</li>
+</ol></li>
+</ul>
+<h3>On the local host</h3>
+<p>We generate an SSH key pair for use by Droid:-</p>
+<pre><code class="language-shell">$ ssh-keygen -b 2048 -t rsa -C "Identifies Droid" -f ~/.ssh/droid_id_rsa</code></pre>
+<p>We are asked for a pass phrase with which to secure the private key.  We are
+prompted for this pass phrase each time we use it to authenticate to a remote
+Host.  So we register it with our SSH Agent which will &quot;remember&quot; the pass
+phrase so that we aren't repeatedly prompted for it:-</p>
+<pre><code class="language-shell">$ ssh-add ~/.ssh/droid_id_rsa</code></pre>
+<p>We now copy the public key to a temporary place on the remote Host.  Let's
+pretend our remote Host is at 198.51.100.1 and that we have a sufficiently
+privileged account there:-</p>
+<pre><code class="language-shell">$ scp ~/.ssh/droid_id_rsa.pub myuser@198.51.100.1:/tmp/</code></pre>
+<p>We are now prepared to perform the required steps on the remote Host.</p>
+<h3>On the remote Host</h3>
+<p>We create a dedicated user account for Droid:-</p>
+<pre><code class="language-shell">$ sudo adduser --disabled-password --gecos "Droid" \
+       --home "/usr/local/droid" "droid"</code></pre>
+<p>We enable public key authentication for our Droid user, using the public key
+uploaded in a previous step:-</p>
+<pre><code class="language-shell">$ sudo mkdir /usr/local/droid/.ssh
+$ sudo chown droid:droid /usr/local/droid/.ssh
+$ sudo chmod 0750 /usr/local/droid/.ssh
+$ sudo mv /tmp/droid_id_rsa.pub /usr/local/droid/.ssh/authorized_keys
+$ sudo chown droid:droid /usr/local/droid/.ssh/authorized_keys
+$ sudo chmod 0640 /usr/local/droid/.ssh/authorized_keys</code></pre>
+<p>We enable password-less Sudoing for our Droid user, writing the following
+content to a sudoers file:</p>
+<pre><code class="language-text"># Sudoers for Droid
+Cmnd_Alias DROID_COMMANDS = /usr/bin/apt-get install,/bin/chown,/bin/chmod
+droid ALL=(root) NOPASSWD:DROID_COMMANDS</code></pre>
+<p>So we create and edit the sudoers file:-</p>
+<pre><code class="language-shell">$ sudo touch /etc/sudoers.d/droid
+$ sudo vi /etc/sudoers.d/droid</code></pre>
+<p>Finally, we install the PHP CLI from the system packages:-</p>
+<pre><code class="language-shell">$ sudo apt-get install php5-cli</code></pre>
+<p>We're now able to add this Host to our inventory of Droid-managed Hosts.  Let's
+test it!</p>
+<h3>Test remote execution</h3>
+<p>We will create a new Droid Project and have Droid run a simple command on our
+remote Host.</p>
+<pre><code class="language-shell">$ mkdir myproject &amp;&amp; cd myproject
+$ composer init -n
+$ composer require droid/droid-standard</code></pre>
+<p>We will create the following Project configuration:-</p>
+<pre><code class="language-yaml">project:
+    name: "This is just a test project"
+targets:
+    testing:
+        tasks:
+            - name: "Talk to me"
+              command: "debug:echo"
+              arguments:
+                  message: "I am speaking to you from afar"
+              hosts: "testhost"
+hosts:
+    testhost:
+        droid_ip: "198.51.100.1"
+        username: droid
+        keyfile: "~/.ssh/droid_id_rsa"</code></pre>
+<p>We may now execute the Target named <code>testing</code> to run our test:-</p>
+<pre><code class="language-shell">$ vendor/bin/droid testing</code></pre>
+<p>If all went well, we should see:-</p>
+<pre><code class="language-shell">Droid: Running target `testing`
+Task `Talk to me`: debug:echo on testhost
+Host testhost: message=I am speaking to you from afar
+testhost Begin droid enablement.</code></pre>
+<p>At this point, Droid is installing Composer and itself on <code>testhost</code>. After a
+pause, we should see the remaining output:-</p>
+<pre><code class="language-shell">testhost Finished droid enablement. Success.
+testhost I am speaking to you from afar
+Result: 0
+--------------------------------------------
+$</code></pre>
+<p>This was a successful test.</p>
+                    </div>
+        <div class="col-md-3"></div>
+    </div>
+</div>
+
+</body>
+</html>

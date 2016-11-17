@@ -1,0 +1,122 @@
+<html>
+<head>
+<title>Command Reference - Droid PHP</title>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/flatly/bootstrap.min.css" rel="stylesheet" integrity="sha384-+ENW/yibaokMnme+vBLnHMphUYxHs34h9lpdbSLuAwGkOKFRl4C34WkjazBtb7eT" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/styles/monokai.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/languages/yaml.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/languages/php.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body>
+    <div class="container-fluid">
+    <div class="row">
+        <div class="col-md-3">
+            <h1>Navigation</h1>
+
+<ul>
+    <li><a href="/index.html">Home</a></li>
+    <li><a href="/getting-started.html">Getting started</a></li>
+    <li><a href="/task-arguments-and-variables.html" title="Task Arguments and Variables">Task Arguments and Variables</a></li>
+    <li><a href="/enable-remote-command-execution.html" title="Enable Remote Command Execution">Enable remote command execution</a></li>
+    <li><a href="/configuration-reference/index.html" title="Configuration Reference">Configuration reference</a>
+        <ul>
+            <li><a href="/configuration-reference/project.html" title="Project Configuration">Project</a></li>
+            <li><a href="/configuration-reference/target.html" title="Target Configuration">Target</a></li>
+            <li><a href="/configuration-reference/task.html" title="Task Configuration">Task</a></li>
+            <li><a href="/configuration-reference/host.html" title="Host Configuration">Host</a></li>
+            <li><a href="/configuration-reference/group.html" title="Group Configuration">Group</a></li>
+            <li><a href="/configuration-reference/firewall-rule.html" title="Firewall Rule Configuration">Firewall Rule</a></li>
+            <li><a href="/configuration-reference/module.html" title="Module Configuration">Module</a></li>
+        </ul>
+    </li>
+    <li><a href="/modules.html" title="Modules">Modules - reusable Task lists</a></li>
+    <li><a href="/command-reference/index.html" title="Command Reference">Command Reference</a></li>
+    <li><a href="/command-plugins.html" title="Command Plugins">Command Plugins</a></li>
+    <li><a href="/hacking.html" title="Hacking - Contributor&apos;s Guide">Hacking</a></li>
+</ul>
+    
+        </div>
+        <div class="col-md-6">
+                <h1>Command Reference</h1>
+    <p class="lead">
+        Below you'll find a list of all the available commands in the standard distribution of Droid.
+    </p>
+    <p class="lead">
+        Click on the command-name for full description, available arguments and options, etc.
+    </p>
+    <ul>
+            <li><code><a href="schema__load.html">schema:load</a></code> Load database schema into database</li>
+            <li><code><a href="os__reboot.html">os:reboot</a></code> Initiate a reboot.</li>
+            <li><code><a href="hipchat__room-message.html">hipchat:room-message</a></code> Sends a HipChat message to a room</li>
+            <li><code><a href="apache__dismod.html">apache:dismod</a></code> Disable Apache modules.</li>
+            <li><code><a href="apache__enmod.html">apache:enmod</a></code> Enable Apache modules.</li>
+            <li><code><a href="apache__ensite.html">apache:ensite</a></code> Enable Apache sites.</li>
+            <li><code><a href="apache__dissite.html">apache:dissite</a></code> Disable Apache sites.</li>
+            <li><code><a href="git__merge.html">git:merge</a></code> Merge branch</li>
+            <li><code><a href="git__fetch.html">git:fetch</a></code> Fetch commits from remote</li>
+            <li><code><a href="git__pull.html">git:pull</a></code> Pull (Fetch+Merge) commits from remote</li>
+            <li><code><a href="service__restart.html">service:restart</a></code> Restart a service</li>
+            <li><code><a href="service__reload.html">service:reload</a></code> Reload a service</li>
+            <li><code><a href="service__start.html">service:start</a></code> Start a service</li>
+            <li><code><a href="service__stop.html">service:stop</a></code> Stop a service</li>
+            <li><code><a href="apt-get__upgrade.html">apt-get:upgrade</a></code> Upgrade all packages to latest versions from sources</li>
+            <li><code><a href="apt-get__clean.html">apt-get:clean</a></code> Clears out the local repository of retrieved package files.</li>
+            <li><code><a href="apt-get__remove.html">apt-get:remove</a></code> Removes package(s) through apt-get on Debian based systems</li>
+            <li><code><a href="apt-get__update.html">apt-get:update</a></code> Update the package index from sources</li>
+            <li><code><a href="apt-get__install.html">apt-get:install</a></code> Installs package(s) through apt-get on Debian based systems</li>
+            <li><code><a href="fs__setline.html">fs:setline</a></code> Add a (name, value) pair to a line based file, or update an existing (name, value) pair.</li>
+            <li><code><a href="fs__copy.html">fs:copy</a></code> Copy a single file</li>
+            <li><code><a href="fs__mkdir.html">fs:mkdir</a></code> Creates a directory</li>
+            <li><code><a href="fs__template.html">fs:template</a></code> Generates a file from a template</li>
+            <li><code><a href="fs__touch.html">fs:touch</a></code> Change file access and modification time</li>
+            <li><code><a href="fs__chmod.html">fs:chmod</a></code> Modifies the file mode bits</li>
+            <li><code><a href="fs__mount.html">fs:mount</a></code> Mount a filesystem by updating /etc/fstab</li>
+            <li><code><a href="fs__rename.html">fs:rename</a></code> Renames a file/directory</li>
+            <li><code><a href="fs__symlink.html">fs:symlink</a></code> Make a symbolic link</li>
+            <li><code><a href="fs__chown.html">fs:chown</a></code> Change ownership of a file</li>
+            <li><code><a href="cron__addjob.html">cron:addjob</a></code> Create a cron job.</li>
+            <li><code><a href="cron__deljob.html">cron:deljob</a></code> Delete a cron job.</li>
+            <li><code><a href="debconfdb__set.html">debconfdb:set</a></code> Set debconf database entries from the supplied file.</li>
+            <li><code><a href="composer__install.html">composer:install</a></code> Composer install</li>
+            <li><code><a href="brew__unlink.html">brew:unlink</a></code> Unlink homebrew package</li>
+            <li><code><a href="brew__uninstall.html">brew:uninstall</a></code> Uninstall/remove homebrew package</li>
+            <li><code><a href="brew__tap.html">brew:tap</a></code> Adds a homebrew tap</li>
+            <li><code><a href="brew__untap.html">brew:untap</a></code> Removes a homebrew tap</li>
+            <li><code><a href="cask__install.html">cask:install</a></code> Install homebrew cask package</li>
+            <li><code><a href="cask__uninstall.html">cask:uninstall</a></code> Uninstall homebrew cask package</li>
+            <li><code><a href="brew__install.html">brew:install</a></code> Install homebrew package</li>
+            <li><code><a href="mysql__dump-all.html">mysql:dump-all</a></code> Perform a mysql dump for all databases on a server</li>
+            <li><code><a href="mysql__master-info.html">mysql:master-info</a></code> Configure a MySQL replication slave with information about the master.</li>
+            <li><code><a href="mysql__dump.html">mysql:dump</a></code> Perform a mysql dump</li>
+            <li><code><a href="mysql__adduser.html">mysql:adduser</a></code> Add a MySQL user account.</li>
+            <li><code><a href="mysql__load.html">mysql:load</a></code> Load a mysql dump</li>
+            <li><code><a href="mysql__deluser.html">mysql:deluser</a></code> Delete a MySQL user account.</li>
+            <li><code><a href="ping.html">ping</a></code> Ping the specified hosts, or all hosts in the Inventory.</li>
+            <li><code><a href="target__run.html">target:run</a></code> Run a target</li>
+            <li><code><a href="inventory.html">inventory</a></code> Show inventory configuration</li>
+            <li><code><a href="config.html">config</a></code> Show project configuration</li>
+            <li><code><a href="module__install.html">module:install</a></code> Install third-party droid modules in droid-vendor</li>
+            <li><code><a href="generate__plugin.html">generate:plugin</a></code> Generate a plugin project</li>
+            <li><code><a href="debug__echo.html">debug:echo</a></code> Echo a message to the console</li>
+            <li><code><a href="ssh__exec.html">ssh:exec</a></code> Execute a command over ssh</li>
+            <li><code><a href="ssh__copy.html">ssh:copy</a></code> Copy files to or from a remote host</li>
+            <li><code><a href="bower__install.html">bower:install</a></code> Bower install</li>
+            <li><code><a href="shell__exec.html">shell:exec</a></code> Execute the given command line in Bash.</li>
+            <li><code><a href="nginx__dissite.html">nginx:dissite</a></code> Disable Nginx sites.</li>
+            <li><code><a href="nginx__ensite.html">nginx:ensite</a></code> Enable Nginx sites.</li>
+            <li><code><a href="user__enable-key-auth.html">user:enable-key-auth</a></code> Append ssh public keys to a user authorized_keys file.</li>
+            <li><code><a href="user__create.html">user:create</a></code> Add a Unix user account.</li>
+            <li><code><a href="fw__install.html">fw:install</a></code> Generate and install UFW firewall rules on an Inventory host or all Inventory hosts.</li>
+            <li><code><a href="fw__generate.html">fw:generate</a></code> Generate and print UFW firewall rules for an Inventory host or all Inventory hosts.</li>
+            <li><code><a href="fixtures__load.html">fixtures:load</a></code> Load Alice fixture data into database</li>
+        </ul>
+        </div>
+        <div class="col-md-3"></div>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,144 @@
+<html>
+<head>
+<title>Firewall Rule Configuration - Droid PHP</title>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/flatly/bootstrap.min.css" rel="stylesheet" integrity="sha384-+ENW/yibaokMnme+vBLnHMphUYxHs34h9lpdbSLuAwGkOKFRl4C34WkjazBtb7eT" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/styles/monokai.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/languages/yaml.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/languages/php.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body>
+    <div class="container-fluid">
+    <div class="row">
+        <div class="col-md-3">
+            <h1>Navigation</h1>
+
+<ul>
+    <li><a href="/index.html">Home</a></li>
+    <li><a href="/getting-started.html">Getting started</a></li>
+    <li><a href="/task-arguments-and-variables.html" title="Task Arguments and Variables">Task Arguments and Variables</a></li>
+    <li><a href="/enable-remote-command-execution.html" title="Enable Remote Command Execution">Enable remote command execution</a></li>
+    <li><a href="/configuration-reference/index.html" title="Configuration Reference">Configuration reference</a>
+        <ul>
+            <li><a href="/configuration-reference/project.html" title="Project Configuration">Project</a></li>
+            <li><a href="/configuration-reference/target.html" title="Target Configuration">Target</a></li>
+            <li><a href="/configuration-reference/task.html" title="Task Configuration">Task</a></li>
+            <li><a href="/configuration-reference/host.html" title="Host Configuration">Host</a></li>
+            <li><a href="/configuration-reference/group.html" title="Group Configuration">Group</a></li>
+            <li><a href="/configuration-reference/firewall-rule.html" title="Firewall Rule Configuration">Firewall Rule</a></li>
+            <li><a href="/configuration-reference/module.html" title="Module Configuration">Module</a></li>
+        </ul>
+    </li>
+    <li><a href="/modules.html" title="Modules">Modules - reusable Task lists</a></li>
+    <li><a href="/command-reference/index.html" title="Command Reference">Command Reference</a></li>
+    <li><a href="/command-plugins.html" title="Command Plugins">Command Plugins</a></li>
+    <li><a href="/hacking.html" title="Hacking - Contributor&apos;s Guide">Hacking</a></li>
+</ul>
+    
+        </div>
+        <div class="col-md-6">
+                        <h1>Firewall rule configuration</h1>
+<p>The Droid Commands <code>fw:generate</code> and <code>fw:install</code> use Firewall rule
+configuration of a Host to set-up Uncomplicated Firewall (UFW) on the Host.
+Each rule is transformed into the arguments needed to execute the <code>ufw</code> program
+on the Host.  For example, the following rule:-</p>
+<pre><code class="language-yaml">- address: "198.51.100.60"
+  port: 3306
+  direction: "outbound"
+  action: "allow"
+  comment: "Allow MySQL connections to the db server (198.51.100.60)"</code></pre>
+<p>is transformed into the following command:-</p>
+<pre><code class="language-shell">ufw allow out proto tcp from any to 198.51.100.60 port 3306</code></pre>
+<p>An example of a rule for incoming traffic:-</p>
+<pre><code class="language-yaml">- address: "198.51.100.1"
+  port: 22
+  direction: "inbound"
+  action: "allow"
+  comment: "Allow SSH connections from Droid (198.51.100.1)"</code></pre>
+<p>which is transformed into the following command:-</p>
+<pre><code class="language-shell">ufw allow in proto tcp from 198.51.100.1 to any port 22</code></pre>
+<p>It is important to note the <code>fw:install</code> command will activate the UFW rules
+immediately.  The standard firewall policy employed by the <code>fw:install</code> command
+is to deny all incoming traffic by default.  Thus there is the risk of locking
+oneself out of a Host unless its <code>firewall_policy</code> (see <a href="/configuration-reference/host.html" title="Host configuration">Host
+Configuration</a>) is to allow incoming traffic or there is a specific
+Rule to allow incoming traffic to the SSH service.  The previous example is of
+such a rule: it allows Droid running on a specific machine to reach the SSH
+service of the Host.</p>
+<h2><code>address</code></h2>
+<p>The <code>address</code> property of a Rule identifies a remote host, from the perspective
+of the Host to which the Rule applies.  A value is always required.</p>
+<p>A value of &quot;all&quot; is interpreted as &quot;any remote host&quot;.  For example to allow all
+incoming traffic to a web service:-</p>
+<pre><code class="language-yaml">- address: "all"
+  port:443
+  direction: "inbound"
+  action: "allow"
+  comment: "Allow incoming HTTPS traffic from anywhere"
+- address: "all"
+  port: 80
+  direction: "inbound"
+  action: "allow"
+  comment: "Allow incoming HTTP traffic from anywhere"</code></pre>
+<p>The value of the <code>address</code> property may also be a specific IP address or it may
+be the label of another Host as defined in the <code>hosts</code> directive of a Droid
+Project (see <a href="/configuration-reference/project.html" title="Project configuration">Project Configuration</a>):-</p>
+<pre><code class="language-yaml">hosts:
+    web-01:
+        public_ip: "198.51.100.1"
+        ...
+    database-01:
+        ...
+        firewall_rules:
+            - address: "web-01"
+              port: 3306
+              ...
+              comment: "Allow incoming MySQL traffic from the web server."</code></pre>
+<p>In the above example, the Rule for the Host labelled <code>database-01</code> uses the
+address <code>web-01</code> which is interpreted as the public IP address of that Host.  A
+rule can specify the private IP of a Host by appending <code>:private</code> to the
+address label:-</p>
+<pre><code class="language-yaml">hosts:
+    web-01:
+        private_ip: "192.0.2.1"
+        ...
+    database-01:
+        ...
+        firewall_rules:
+            - address: "web-01:private"
+              ...</code></pre>
+<h2><code>port</code></h2>
+<p>The <code>port</code> property of a Rule is a TCP or UDP port number corresponding to the
+service to which traffic is destined.  A value is always required.</p>
+<h2><code>protocol</code></h2>
+<p>The <code>protocol</code> property of a Rule is either <code>tcp</code> or <code>udp</code>, corresponding
+respectively to the TCP and UDP Internet protocols.  The default value, when
+one is not given, is <code>tcp</code>.</p>
+<h2><code>direction</code></h2>
+<p>The <code>direction</code> property of a Rule specifies whether the traffic being
+described is incoming or outgoing, from the perspective of the Host.  The value
+is either <code>inbound</code> or <code>outbound</code>.  The default value, when one is not given,
+is <code>inbound</code>.</p>
+<h2><code>action</code></h2>
+<p>The <code>action</code> property of a Rule determines the action of the firewall when
+traffic matches the Rule.  The value may be one of <code>allow</code>, <code>reject</code> or <code>deny</code>.
+The default value, when one is not given, is <code>allow</code>.</p>
+<p>Traffic is allowed to pass unhindered when the value is <code>allow</code>.</p>
+<p>Traffic is rejected at the initial connection attempt when the value is
+<code>reject</code>.  That is, a TCP connection attempt is reset; a UDP datagram elicits
+an ICMP Port Unreachable message.</p>
+<p>Traffic is silently discarded when the value is <code>deny</code>.</p>
+<h2><code>comment</code></h2>
+<p>The <code>comment</code> property of a Rule is intended to convey a short amount of human
+readable information about the rule, such as a description of or reason for the
+Rule.</p>
+                    </div>
+        <div class="col-md-3"></div>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,6 +1,6 @@
 <html>
 <head>
-<title>Introduction - Droid PHP</title>
+<title>service:stop Command - Droid PHP</title>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/flatly/bootstrap.min.css" rel="stylesheet" integrity="sha384-+ENW/yibaokMnme+vBLnHMphUYxHs34h9lpdbSLuAwGkOKFRl4C34WkjazBtb7eT" crossorigin="anonymous">
@@ -40,41 +40,20 @@
     
         </div>
         <div class="col-md-6">
-                        <h1>Introduction</h1>
-<p>Droid executes Commands.  The Commands to be executed and the computers on
-which to execute them are described in a human readable configuration file.
-Droid reads the configuration file and executes the Commands exactly as
-described.</p>
-<p>Droid is employed to:-</p>
-<ul>
-<li>Automate the provisioning of IT infrastructure</li>
-<li>Deploy applications</li>
-<li>Manage IT infrastructure configuration</li>
-</ul>
-<h2>Concepts</h2>
-<h3>Commands</h3>
-<p>Droid is a <a href="https://symfony.com/doc/current/components/console.html" title="The Console Component">Symfony Console Application</a>.  The Droid Standard
-meta package provides a variety of Droid Commands which are <a href="https://symfony.com/doc/current/console.html" title="Console Commands">Symfony Console
-Commands</a>.  Droid Commands may be executed from the console, or
-they may be invoked as part of a Droid configuration.</p>
-<h3>Tasks</h3>
-<p>A Task is part of a Droid configuration and instructs Droid to execute a
-Command, providing the command Arguments and other meta data.  A Task also
-specifies the computers, or Hosts, on which the Command will execute.</p>
-<h3>Targets</h3>
-<p>A Target is part of a Droid configuration and is an ordered list of Tasks, like
-a recipe.  A Target is intended to achieve a specific goal, such as deploying a
-web application to a web server.  Droid reads each Task of a Target in turn and
-determines on which Hosts to execute the associated Command.  Droid executes
-the Command on each Host, in parallel.</p>
-<h3>Inventory - Hosts and Groups</h3>
-<p>A Host is part of a Droid configuration and describes a computer, real or
-virtual, on which Commands may be executed.  Hosts may be grouped logically
-into Groups, such as all web servers, so that Commands may be executed on all
-members of the Group.</p>
-<h2>Where to go from here</h2>
-<p><a href="/getting-started.html" title="Getting Started">Get started</a>!</p>
-                    </div>
+                <h1>Command <code>service:stop</code></h1>
+    <p class="lead">Stop a service</p>
+    
+    <h3>Arguments</h3>
+        <ul>
+                <li><code>name</code>: Name of the service</li>
+            </ul>
+    
+    <h3>Options</h3>
+        <p>None.</p>
+    
+    <center><a href="index.html" class="btn btn-success">Back to command index</a></center>
+    <br /><br />
+        </div>
         <div class="col-md-3"></div>
     </div>
 </div>

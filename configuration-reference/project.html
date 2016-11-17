@@ -1,0 +1,234 @@
+<html>
+<head>
+<title>Project Configuration - Droid PHP</title>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/flatly/bootstrap.min.css" rel="stylesheet" integrity="sha384-+ENW/yibaokMnme+vBLnHMphUYxHs34h9lpdbSLuAwGkOKFRl4C34WkjazBtb7eT" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/styles/monokai.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/languages/yaml.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/languages/php.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body>
+    <div class="container-fluid">
+    <div class="row">
+        <div class="col-md-3">
+            <h1>Navigation</h1>
+
+<ul>
+    <li><a href="/index.html">Home</a></li>
+    <li><a href="/getting-started.html">Getting started</a></li>
+    <li><a href="/task-arguments-and-variables.html" title="Task Arguments and Variables">Task Arguments and Variables</a></li>
+    <li><a href="/enable-remote-command-execution.html" title="Enable Remote Command Execution">Enable remote command execution</a></li>
+    <li><a href="/configuration-reference/index.html" title="Configuration Reference">Configuration reference</a>
+        <ul>
+            <li><a href="/configuration-reference/project.html" title="Project Configuration">Project</a></li>
+            <li><a href="/configuration-reference/target.html" title="Target Configuration">Target</a></li>
+            <li><a href="/configuration-reference/task.html" title="Task Configuration">Task</a></li>
+            <li><a href="/configuration-reference/host.html" title="Host Configuration">Host</a></li>
+            <li><a href="/configuration-reference/group.html" title="Group Configuration">Group</a></li>
+            <li><a href="/configuration-reference/firewall-rule.html" title="Firewall Rule Configuration">Firewall Rule</a></li>
+            <li><a href="/configuration-reference/module.html" title="Module Configuration">Module</a></li>
+        </ul>
+    </li>
+    <li><a href="/modules.html" title="Modules">Modules - reusable Task lists</a></li>
+    <li><a href="/command-reference/index.html" title="Command Reference">Command Reference</a></li>
+    <li><a href="/command-plugins.html" title="Command Plugins">Command Plugins</a></li>
+    <li><a href="/hacking.html" title="Hacking - Contributor&apos;s Guide">Hacking</a></li>
+</ul>
+    
+        </div>
+        <div class="col-md-6">
+                        <h1>Project configuration</h1>
+<p>The main purpose of the Droid project configuration, <code>droid.yml</code>, is to declare
+one or more Targets.  This page details all of the configuration directives one
+might use in the configuration of a Droid project.</p>
+<p>An example:-</p>
+<pre><code class="language-yaml">name: "Example Project"
+description: "This is an example of a Droid project"
+variables:
+    something: "useful"
+environment:
+    droid_use_private_net: false
+modules:
+    - "docker": "git@github.com:droid-php/droid-module-docker.git"
+targets:
+    do_my_bidding:
+        ...
+hosts:
+    host1.example.com:
+        ...
+groups:
+   group_a:
+        ...
+include:
+    - "more-configuration.yml"</code></pre>
+<h2><code>name</code></h2>
+<p>An optional name of the Droid project.</p>
+<h2><code>description</code></h2>
+<p>An optional description of the Droid project.  This might describe the reason
+or purpose of the project.</p>
+<h2><code>targets</code></h2>
+<p>The <code>targets</code> directive is used to declare one or more Targets and is a mapping
+of Target name to <a href="/configuration-reference/target.html" title="Target configuration">Target Configuration</a>. For example, we may
+declare a Target named <code>build_everything</code> which executes a number of commands
+on each Host in a group named <code>all_machines</code>:-</p>
+<pre><code class="language-yaml">targets:
+    build_everything:
+        hosts: "all_machines"
+        tasks:
+            - ...</code></pre>
+<p>A Target declared here is executed from the command line by giving the name of
+the Target as an argument to the Droid command:-</p>
+<pre><code class="language-shell">$ vendor/bin/droid build_everything</code></pre>
+<h2><code>variables</code></h2>
+<p>Variables are used to provide commands with named values for use during command
+execution.  The <code>variables</code> directive is a mapping of arbitrary names to
+values.</p>
+<p>Variables may be declared in various places; Targets, Hosts and Groups may
+declare their own variables which are combined with and override those declared
+here at the Project level.  For example, we may declare sensible default values
+at the Project level and declare more-specific values in a Target:-</p>
+<pre><code class="language-yaml">variables:
+    shape: "line"
+    colour: "red"
+targets:
+    do_a_thing:
+        variables:
+            colour: "blue"
+            thickness: 1
+        tasks: ...</code></pre>
+<p>The values available to commands executed by the above example Target
+<code>do_a_thing</code> would be:-</p>
+<pre><code class="language-yaml">shape: "line"
+colour: "blue"
+thickness: 1</code></pre>
+<h2><code>modules</code></h2>
+<p>The <code>modules</code> directive provides Droid with the download URLs of Droid modules
+to be used in a Project and provides names to which to refer to those Modules.
+The directive is a mapping of name to URL.  For example, we may declare that a
+project will use a Module for setting-up an Apache virtual host:-</p>
+<pre><code class="language-yaml">modules:
+    "apache-vhost": "git@github.com:droid-php/droid-module-apache-vhost.git"</code></pre>
+<p>Droid installs Modules by fetching them from the given URLs.  It stores the
+Module content in a directory of the same name, under a directory named
+<code>droid-vendor</code>:-</p>
+<pre><code class="language-shell">$ vendor/bin/droid module:install
+Installing droid modules:
+- apache-vhost from git git@github.com:droid-php/droid-module-apache-vhost.git
+Cloning from git@github.com:droid-php/droid-module-apache-vhost.git into droid-vendor/apache-vhost
+Cloning into 'droid-vendor/apache-vhost'...
+...
+Done</code></pre>
+<p>Currently, only <code>git@</code> URLs are supported.  We would later refer the Module by
+the name given here, which can be any name so long as it is used consistently
+within a Project.  Please see the <a href="/modules.html" title="Modules">Module documentation</a> to learn how
+to use a Module in a Project.</p>
+<h2><code>hosts</code></h2>
+<p>The <code>hosts</code> directive is used to declare one or more Hosts.  It is a mapping of
+Host name to <a href="/configuration-reference/host.html" title="Host configuration">Host Configuration</a>.  For example, we may declare
+Hosts named <code>www.example.com</code> and provide Droid with its IP address:-</p>
+<pre><code class="language-yaml">hosts:
+    "www.example.com":
+        droid_ip: "198.51.100.1"</code></pre>
+<p>We may then refer to this Host when we wish to execute commands on it:</p>
+<pre><code class="language-yaml">targets:
+    make_website:
+        hosts: "www.example.com"
+        tasks:
+            - ...</code></pre>
+<h2><code>groups</code></h2>
+<p>The <code>groups</code> directive is used to declare one or more Groups of Hosts.  It is a
+mapping of Group name to <a href="/configuration-reference/group.html" title="Group configuration">Group Configuration</a>.  For example, we
+may declare a group of web servers named <code>webservers</code>:-</p>
+<pre><code class="language-yaml">groups:
+    webservers:
+        hosts:
+            - www1.example.com
+            - www2.example.com</code></pre>
+<p>We may then refer to this Group when we wish to execute commands on its Hosts:</p>
+<pre><code class="language-yaml">targets:
+    make_website:
+        hosts: "webservers"
+        tasks:
+            - ...</code></pre>
+<h2><code>environment</code></h2>
+<p>The <code>environment</code> directive is intended to provide a way alter the behaviour of
+Droid for different operating environments.  This is useful when a Droid
+Project is to be used on more than one machine and those machines differ in
+some way.  For example, one may have access to a private network of the Hosts
+it manages, but another may only be able to connect to the public addresses of
+the same Hosts.</p>
+<p>The current parameters that may be set via the <code>environment</code> directive are:-</p>
+<ul>
+<li><code>droid_use_private_net</code>: <code>true</code> or <code>false</code> (default <code>false</code>).  When <code>true</code>
+Droid will connect to the <code>private_ip</code> of Hosts instead of the <code>public_ip</code>.
+This setting has no effect on Hosts for which a <code>droid_ip</code> is defined.  It is
+an error if this value is <code>true</code> and a Host defines neither <code>private_ip</code> nor
+<code>public_ip</code>.</li>
+</ul>
+<h2><code>include</code></h2>
+<p>The <code>include</code> directive allows the Droid Project configuration to be composed
+of multiple files to ease maintenance of the configuration.  Each of the other
+directives described on this page may be placed in separate files and included
+in the main <code>droid.yml</code>.  The files are joined together such that the resulting
+configuration is the union of the content of all of the files.</p>
+<p>The <code>include</code> directive is a list of paths, each to a file to in included.
+Simple wild card matching is possible using the <code>*</code> operator, which matches zero
+or more characters and <code>?</code>, which matches exactly one character.</p>
+<p>For example, we may wish to declare:-</p>
+<ul>
+<li>each Target in a separate file in a <code>target</code> sub directory</li>
+<li>Hosts and Groups in a file named <code>inventory.yml</code></li>
+<li>Project variables in a file named <code>variables.yml</code></li>
+</ul>
+<p>and place the configuration in five separate files:-</p>
+<pre><code class="language-yaml">--------------------------
+# droid.yml
+--------------------------
+include:
+    - inventory.yml
+    - targets/*.yml
+    - variables.yml
+
+--------------------------
+# inventory.yml
+--------------------------
+hosts:
+     www.example.com:
+         ...
+     db.example.com
+         ...
+groups:
+     web_servers:
+         ...
+     db_servers:
+         ...
+
+--------------------------
+# targets/make-website.yml
+--------------------------
+targets:
+    make-website:
+        hosts: web_servers
+
+--------------------------
+# targets/make-db.yml
+--------------------------
+targets:
+    make-db:
+        hosts: db_servers
+
+--------------------------
+# variables:
+--------------------------
+variables:
+    dbname: "mydb"</code></pre>
+                    </div>
+        <div class="col-md-3"></div>
+    </div>
+</div>
+
+</body>
+</html>

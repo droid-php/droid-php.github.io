@@ -1,202 +1,325 @@
-<!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport"    content="width=device-width, initial-scale=1.0">
-	
-	<title>Droid: Task Runner for PHP</title>
-
-	<!-- Bootstrap itself -->
-	<link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" type="text/css">
-	<!-- Icons -->
-	<link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet"> 
-	<!-- Fonts -->
-	<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,700"> 
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.2.0/styles/default.min.css">
-	<!-- Custom styles -->
-	<link rel="stylesheet" href="/assets/style.css">
-    <style>
-    .header {
-        background: linear-gradient(to bottom, #405080 0%,#203040 100%) !important;
-    }
-    .navbar, .dropdown-menu, .navbar-default .navbar-nav>.open>a, .dropdown-menu>li>a {
-        margin-bottom: 0px !important;
-        background-color: #203040 !important;
-        border-radius: 0px !important;
-        border: 0px none !important;
-    }
-    .navbar, .dropdown-menu, .navbar-default .navbar-nav>.open>a, .dropdown-menu>li>a:hover {
-		color: #D87563 !important;
-	}
-
-    .navbar li a, .navbar a.navbar-brand {
-        color: #ffffff !important;
-    }
-    
-    .navbar li a.cta {
-        background-color: #80c080 !important;
-        border-radius: 5px;
-        margin-top: 9px;
-        padding: 5px;
-        color: #ffffff !important;
-    }
-    
-    /* make sidebar nav vertical */ 
-    @media (min-width: 768px) {
-      .sidebar-nav {
-          margin-top: 20px;
-          margin-bottom: 20px;
-      }
-      .sidebar-nav .navbar .navbar-collapse {
-        padding: 0;
-        max-height: none;
-      }
-      .sidebar-nav .navbar ul {
-        float: none;
-      }
-      .sidebar-nav .navbar ul:not {
-        display: block;
-      }
-      .sidebar-nav .navbar li {
-        float: none;
-        display: block;
-      }
-      .sidebar-nav .navbar li a {
-        padding-top: 12px;
-        padding-bottom: 12px;
-      }
-    }
-    </style>
-
-	<!--[if lt IE 9]> <script src="assets/js/html5shiv.js"></script> <![endif]-->
+<title>Getting Started - Droid PHP</title>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/flatly/bootstrap.min.css" rel="stylesheet" integrity="sha384-+ENW/yibaokMnme+vBLnHMphUYxHs34h9lpdbSLuAwGkOKFRl4C34WkjazBtb7eT" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/styles/monokai.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/languages/yaml.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/languages/php.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
 </head>
-
 <body>
-  <!-- Static navbar -->
-  <nav class="navbar navbar-default">
-    <div class="container">
-      <div class="navbar-header">
-        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-          <span class="sr-only">Toggle navigation</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-        <a class="navbar-brand" href="/">Droid</a>
-      </div>
-      <div id="navbar" class="navbar-collapse collapse">
-        <ul class="nav navbar-nav navbar-right">
-          <li><a href="/">Home</a></li>
-          <li class="dropdown">
-			  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Configuration <b class="caret"></b></a>
-			  <ul class="dropdown-menu">
-				  <li><a href="/droid-yml">Configuring Droid with droid.yml</a></li>
-				  <li><a href="/targets">Tasks and targets</a></li>
-				  <li><a href="/inventory">Remote tasks with inventories</a></li>
-			  </ul>
-		  </li>
-          <li><a href="/commands">Command index</a></li>
-          <li class="dropdown">
-			  <a href="#" class="dropdown-toggle cta" data-toggle="dropdown">Getting started <b class="caret"></b></a>
-			  <ul class="dropdown-menu">
-				  <li><a href="/installation">Installation</a></li>
-				  <li><a href="/using-commands">Using commands</a></li>
-				  <li><a href="/terminology">Terminology</a></li>
-			  </ul>
-		  </li>
-        </ul>
-      </div><!--/.nav-collapse -->
-    </div><!--/.container-fluid -->
-  </nav>
-<div class="container">
+    <div class="container-fluid">
     <div class="row">
-        <div class="col-md-2">
-        </div>
-        <div class="col-md-8">
-            <h1>Getting started</h1>
-<p>Cool, you are ready to try out Droid? We're sure you're going to love it.</p>
-<p>We suggest you check out the <a href="/installation">installation</a> page first.</p>
-<h2>List the available commands</h2>
-<pre><code class="language-sh">$ droid list
-Droid version 1.0.0
+        <div class="col-md-3">
+            <h1>Navigation</h1>
 
+<ul>
+    <li><a href="/index.html">Home</a></li>
+    <li><a href="/getting-started.html">Getting started</a></li>
+    <li><a href="/task-arguments-and-variables.html" title="Task Arguments and Variables">Task Arguments and Variables</a></li>
+    <li><a href="/enable-remote-command-execution.html" title="Enable Remote Command Execution">Enable remote command execution</a></li>
+    <li><a href="/configuration-reference/index.html" title="Configuration Reference">Configuration reference</a>
+        <ul>
+            <li><a href="/configuration-reference/project.html" title="Project Configuration">Project</a></li>
+            <li><a href="/configuration-reference/target.html" title="Target Configuration">Target</a></li>
+            <li><a href="/configuration-reference/task.html" title="Task Configuration">Task</a></li>
+            <li><a href="/configuration-reference/host.html" title="Host Configuration">Host</a></li>
+            <li><a href="/configuration-reference/group.html" title="Group Configuration">Group</a></li>
+            <li><a href="/configuration-reference/firewall-rule.html" title="Firewall Rule Configuration">Firewall Rule</a></li>
+            <li><a href="/configuration-reference/module.html" title="Module Configuration">Module</a></li>
+        </ul>
+    </li>
+    <li><a href="/modules.html" title="Modules">Modules - reusable Task lists</a></li>
+    <li><a href="/command-reference/index.html" title="Command Reference">Command Reference</a></li>
+    <li><a href="/command-plugins.html" title="Command Plugins">Command Plugins</a></li>
+    <li><a href="/hacking.html" title="Hacking - Contributor&apos;s Guide">Hacking</a></li>
+</ul>
+    
+        </div>
+        <div class="col-md-6">
+                        <h1>Getting started</h1>
+<h2>A first Droid project</h2>
+<p>Let's see how to use Droid to set-up a web server.  To begin we will create a
+new <a href="https://getcomposer.org/">Composer</a> project and install Droid along with a number of standard
+Droid commands:-</p>
+<pre><code class="language-shell">$ composer init -n
+$ composer require --no-dev droid/droid-standard</code></pre>
+<p>Next we will create a new Droid project by creating a <code>droid.yml</code> file with the
+following contents:-</p>
+<pre><code class="language-yaml">project:
+    name: "My first Droid project"
+
+targets:
+    make-webserver:
+        tasks:
+            -
+              name: "Install Apache2"
+              command: "apt-get:install"
+              sudo: true
+              arguments:
+                  package: "apache2"</code></pre>
+<p>And now we may execute the tasks of the <code>make-webserver</code> Target:-</p>
+<pre><code class="language-shell">$ vendor/bin/droid make-webserver</code></pre>
+<p>Upon which we should see:-</p>
+<pre><code class="language-shell">Droid: Running target `make-webserver`
+Task `Install Apache2`: apt-get:install package=apache2  locally
+localhost apt-get install -y apache2
+... (much output) ...
+localhost  * Starting web server apache2
+...
+Result: 0
+--------------------------------------------
+$</code></pre>
+<p>We have installed the Apache 2 package and its dependencies by running <code>apt-get install -y apache2</code> on the local host.  We did this by writing a <code>droid.yml</code>
+<a href="http://www.yaml.org/spec/1.2/spec.html" title="YAML Ain’t Markup Language (YAML&#8192;) Version 1.2">Yaml</a> configuration file which declares a Droid project and a Target which
+we named <code>make-webserver</code>.  A Target is like a recipe or a script and defines a
+number of steps that Droid must take to achieve a desired outcome.  We have
+defined one Task, which we named &quot;Install Apache2&quot;, to invoke the
+<code>apt-get:install</code> Droid command.  We can see that <code>apt-get:install</code> takes one
+argument, <code>package</code>, by invoking the Droid help command:-</p>
+<pre><code class="language-shell">$ vendor/bin/droid help apt-get:install
 Usage:
-  command [options] [arguments]
+  apt-get:install &lt;package&gt;
+
+Arguments:
+  package               Name of the package(s) to install
 
 Options:
   -h, --help            Display this help message
+  -q, --quiet           Do not output any message
+  -V, --version         Display this application version
+      --ansi            Force ANSI output
+      --no-ansi         Disable ANSI output
+  -n, --no-interaction  Do not ask any interactive question
   -v|vv|vvv, --verbose  Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
 
-Available commands:
-  config            Show project configuration
-  help              Displays help for a command
-  inventory         Show inventory configuration
-  list              Lists commands
- bower
-  bower:install     Bower install
- composer
-  composer:install  Composer install
- dbtk
-  dbtk:schema-load  Load schema into database
- debug
-  debug:echo        Echo a message to the console</code></pre>
-<p><em>shortened the output for brevity</em></p>
-<p>This commmand will list the available Droid commands. You'll notice that there are several 'global' commands, such as <code>config</code>, <code>help</code>, <code>inventory</code>, <code>list</code>, etc.</p>
-<p>Additionally, you'll find several plugin-specific commands, such as <code>composer:install</code> or <code>debug:echo</code></p>
-<h2>Learning more about the available commands</h2>
-<p>To learn more about these commands, use the <code>--help</code> flag:</p>
-<pre><code class="language-sh">$ droid debug:echo --help
-Usage:
-  debug:echo [options] [--] &lt;message&gt;
-
-Arguments:
-  message               Message to output
-
-Options:
-  -c, --color=COLOR     Set color of the output
-  -u, --uppercase       Uppercase the output
 Help:
- Echo a message to the console</code></pre>
-<p>You'll find that the <code>debug:echo</code> command takes a <code>message</code> argument, and optionally a color and uppercase flag.</p>
-<h2>Running commands</h2>
-<p>You can call this command like this:</p>
-<pre><code class="language-sh">$ droid debug:echo "hello world"
-hello world
-$ droid debug:echo "hello world" -u
-HELLO WORLD</code></pre>
-                                </div>
-        <div class="col-md-2">
-        </div>
+  Installs package(s) through apt-get on Debian based systems</code></pre>
+<p>Finally, we declared that we desire the command to be executed with elevated
+privileges by setting <code>sudo: true</code>.  The output generated during execution of
+the <code>make-webserver</code> Target begins by displaying the name of the Target and
+then information about and output from each of the Tasks defined by the Target.</p>
+<p>Now suppose we want to install Apache 2 on two remote machines: let us see how
+to use Droid Inventory to manage remote installation.</p>
+<h2>Inventory</h2>
+<p>Droid is able to execute Commands on remote hosts with a little extra
+configuration, but first it needs us to prepare the hosts by installing PHP,
+setting-up SSH public key authentication and granting password-less sudo
+privileges for the commands we wish to execute.  Please see how to <a href="/enable-remote-command-execution.html" title="Enable Remote Command Execution">enable
+remote command execution</a> for more on this.</p>
+<p>Let's assume that our remote hosts are suitably prepared; we will need to
+provide Droid with the name of a user account on the hosts and paths to private
+ssh key files.  We will add two top-level directives, <code>groups</code> and <code>hosts</code>, to
+our <code>droid.yml</code>:-</p>
+<pre><code class="language-yaml">groups:
+    webservers:
+        hosts:
+            - web-01
+            - web-02
+hosts:
+    web-01:
+        public_ip: "198.51.100.5"
+        username: "c3po"
+        keyfile: "/path/to/c3po_id_rsa"
+    web-02:
+        public_ip: "198.51.100.6"
+        username: "r2d2"
+        keyfile: "/path/to/r2d2_id_rsa"</code></pre>
+<p>We have declared two hosts which we named <code>web-01</code> and <code>web-02</code> and we grouped
+them under the name <code>webservers</code>.  Now we may declare that our <code>make-webserver</code>
+Target should execute remotely at these hosts:-</p>
+<pre><code class="language-yaml">targets:
+    make-webserver:
+        hosts: webservers
+        tasks:
+            -
+              ...</code></pre>
+<p>We invoke Droid as before:-</p>
+<pre><code class="language-shell">$ vendor/bin/droid make-webserver</code></pre>
+<p>and we shall see:-</p>
+<pre><code class="language-shell">Droid: Running target `make-webserver`
+Task `Install Apache2`: apt-get:install on webservers
+Host web-01: package=apache2
+Host web-02: package=apache2
+web-01 Begin droid enablement.
+web-01 Finished droid enablement. Success.
+web-02 Begin droid enablement.
+web-02 Finished droid enablement. Success.
+web-01 apt-get install -y apache2
+web-02 apt-get install -y apache2
+... (much output) ...
+web-01  * Starting web server apache2
+... (much output) ...
+web-02  * Starting web server apache2
+...
+Result: 0
+--------------------------------------------
+$</code></pre>
+<p>We see that Droid has installed Apache 2 on the two hosts in our Inventory.  In
+order to complete each Task, Droid on our local machine will invoke the
+corresponding Droid command on the hosts in our Inventory.  Droid will first
+make sure that it is installed, at the same version number and with the same
+available commands, on those hosts.</p>
+<h2>Going further: configure Apache</h2>
+<p>Let's go further and set-up two Apache virtual hosts on both of our web
+servers.  For each virtual host we will install a virtual host config file,
+create a document root directory, deploy an index page and enable the virtual
+host.  Finally, we will trigger Apache to reload its configuration.</p>
+<p>We begin by creating a directory for the file assets in our Droid project:-</p>
+<pre><code class="language-shell">$ mkdir assets</code></pre>
+<p>We create a basic HTML index page, <code>assets/index.html</code>, with the following
+content:-</p>
+<pre><code class="language-html">&lt;html&gt;
+&lt;head&gt;&lt;title&gt;Coming soon!&lt;/title&gt;&lt;/head&gt;
+&lt;body&gt;&lt;p&gt;Coming soon!&lt;/p&gt;&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<p>and a template for the virtual host config file, <code>assets/vhost.conf.template</code>,
+with the following content:-</p>
+<pre><code class="language-twig"># {{ item.name }}
+&lt;VirtualHost *:80&gt;
+  ServerName "{{ item.name }}"
+  DocumentRoot "{{ item.docroot }}"
+  &lt;Directory "{{ item.docroot }}"&gt;
+    Options Indexes FollowSymLinks MultiViews
+    AllowOverride All
+    Require all granted
+  &lt;/Directory&gt;
+  ErrorLog "/var/log/apache2/{{ item.name }}_error.log"
+  CustomLog "/var/log/apache2/{{ item.name }}_access.log" combined
+&lt;/VirtualHost&gt;</code></pre>
+<p>This vhost config template contains placeholders <code>{{ item.name }}</code> and <code>{{ item.docroot }}</code> which will be replaced with concrete values.  We will add to
+our <code>droid.yml</code> a Target variable in which to declare the concrete values:-</p>
+<pre><code class="language-yaml">targets:
+    make-webserver:
+        hosts: webservers
+        variables:
+            websites:
+                -
+                  name: "one.example.com"
+                  docroot: "/var/www/one.example.com"
+                -
+                  name: "another.example.com"
+                  docroot: "/var/www/another.example.com"
+        tasks:
+            -
+              ...</code></pre>
+<p>We add a Task to the <code>make-webserver</code> Target to write the vhost config files to
+our web server hosts:-</p>
+<pre><code class="language-yaml">        tasks:
+            -
+              ...
+            -
+              name: "Copy site config to sites-available"
+              command: "fs:copy"
+              sudo: true
+              arguments:
+                  src: "@assets/vhost.conf.template"
+                  dest: "/etc/apache2/sites-available/{{ item.name }}.conf"
+              with_items: websites</code></pre>
+<p>Here we use the <code>fs:copy</code> command to copy the content of our template to
+<code>/etc/apache2/sites-available</code>.  The <code>@</code> character at the beginning of the
+<code>src</code> argument indicates that Droid should substitute the file path with the
+contents of that file and, because the file is a template, it should replace
+placeholders in the content with concrete values.  The <code>with_items</code> directive
+instructs Droid to perform a Task for each item in the list of items declared
+at the named variable: our Target variable <code>websites</code> in this case.  Droid
+makes available a special variable named <code>item</code> containing the values of the
+current item and this is how Droid is able to replace the <code>{{ item.name }}</code> and
+<code>{{ item.docroot }}</code> placeholders.</p>
+<p>Next we will add tasks to create the document root directories and assign
+ownership and permissions:-</p>
+<pre><code class="language-yaml">        tasks:
+            -
+              ...
+            -
+              name: "Create the document root directory"
+              command: "fs:mkdir"
+              sudo: true
+              arguments:
+                  directory: "{{ item.docroot }}"
+              with_items: websites
+            -
+              name: "Change ownership of the document root directory"
+              command: "fs:chown"
+              sudo: true
+              arguments:
+                  file: "{{ item.docroot }}"
+                  user: "root"
+                  group: "www-data"
+              with_items: websites
+            -
+              name: "Change permissions of the document root directory"
+              command: "fs:chmod"
+              sudo: true
+              arguments:
+                  filename: "{{ item.docroot }}"
+                  mode: "2750"
+              with_items: websites</code></pre>
+<p>We deploy our HTML index page:-</p>
+<pre><code class="language-yaml">        tasks:
+            -
+              ...
+            -
+              name: "Copy a placeholder index page to the document root directory"
+              command: "fs:copy"
+              sudo: true
+              arguments:
+                  src: "@assets/index.html"
+                  dest: "{{ item.docroot} }}/index.html"
+              with_items: websites</code></pre>
+<p>The <code>@</code> symbol at the beginning of the <code>src</code> argument instructs Droid to
+substitute the file path with the content of that file without replacing
+placeholders in the content.</p>
+<p>Our final Task is to enable our Apache virtual hosts and trigger a
+configuration reload:-</p>
+<pre><code class="language-yaml">        tasks:
+            -
+              ...
+            -
+              name: "Enable the vhost configuration"
+              command: "apache:ensite"
+              sudo: true
+              arguments:
+                  site-name: "{{ item.name }}"
+              with_items: websites
+              trigger: "Reload the Apache2 service"
+        triggers:
+            -
+              name: "Reload the Apache2 service"
+              command: "service:reload"
+              sudo: true
+              arguments:
+                  name: "apache2"</code></pre>
+<p>Some Droid commands are able to report when they have made a change of some
+kind.  Tasks which invoke such commands can declare a <code>trigger</code> which is a
+special Task that will be run after all other Tasks have completed and only
+when the triggering command reports that a change was made.  In this example
+the <code>service:reload</code> command is executed only when a virtual host was not
+already enabled.</p>
+<p>Our project directory now looks like this:-</p>
+<pre><code class="language-shell">assets/index.html
+assets/vhost.conf.template
+composer.json
+composer.lock
+droid.yml
+vendor/</code></pre>
+<p>We may now execute our Target exactly as we did before:-</p>
+<pre><code class="language-shell">$ vendor/bin/droid make-webserver</code></pre>
+<h2>Further reading</h2>
+<ul>
+<li><a href="/task-arguments-and-variables.html" title="Task Arguments and Variables">Task Arguments and Variables</a></li>
+<li><a href="/enable-remote-command-execution.html" title="Enable Remote Command Execution">Enable Remote Command Execution</a></li>
+<li><a href="/configuration-reference/index.html" title="Configuration Reference">Configuration Reference</a></li>
+<li><a href="/command-reference/index.html" title="Command Reference">Command Reference</a></li>
+<li><a href="/modules.html" title="Modules">Modules - reusable Task lists</a></li>
+</ul>
+                    </div>
+        <div class="col-md-3"></div>
     </div>
 </div>
-
-
-<footer id="footer" class="jumbotron">
-	<section class="container">
-		<div class="row">
-				<div class="col-md-5 col-md-push-1">
-										<a class="addthis_button_github" href="http://github.com/droid-php" target="_blank"></a>
-				</div>
-				<div class="col-md-5 col-md-push-1">
-					<h2>Droid is open-source</h2>
-					<p>You can use Droid in your projects and for your server configuration management for free.
-                    You can easily extend it's functionality through plugins, and use plugins of others.</p>
-					<p>For further details, check out <a href="https://github.com/droid-php/">github.com/droid-php</a></p>
-				</div>
-		</div>	
-	</section>
-</footer>
-
-<p class="small text-muted text-center">Copyright &copy; 2016, <a target="_blank" href="http://www.linkorb.com/">LinkORB</a>. Powered by <a target="_blank" href="http://github.com/linkorb/blazon">Blazon static site generator</a></p>
-<br>
-
-<!-- JavaScript libs are placed at the end of the document so the pages load faster -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-<!-- Include all compiled plugins (below), or include individual files as needed -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.2.0/highlight.min.js"></script>
-<script>hljs.initHighlightingOnLoad();</script>
-<script src="/assets/script.js"></script>
 
 </body>
 </html>

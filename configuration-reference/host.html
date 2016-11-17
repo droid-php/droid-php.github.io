@@ -1,0 +1,200 @@
+<html>
+<head>
+<title>Host Configuration - Droid PHP</title>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/flatly/bootstrap.min.css" rel="stylesheet" integrity="sha384-+ENW/yibaokMnme+vBLnHMphUYxHs34h9lpdbSLuAwGkOKFRl4C34WkjazBtb7eT" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/styles/monokai.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/languages/yaml.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/languages/php.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body>
+    <div class="container-fluid">
+    <div class="row">
+        <div class="col-md-3">
+            <h1>Navigation</h1>
+
+<ul>
+    <li><a href="/index.html">Home</a></li>
+    <li><a href="/getting-started.html">Getting started</a></li>
+    <li><a href="/task-arguments-and-variables.html" title="Task Arguments and Variables">Task Arguments and Variables</a></li>
+    <li><a href="/enable-remote-command-execution.html" title="Enable Remote Command Execution">Enable remote command execution</a></li>
+    <li><a href="/configuration-reference/index.html" title="Configuration Reference">Configuration reference</a>
+        <ul>
+            <li><a href="/configuration-reference/project.html" title="Project Configuration">Project</a></li>
+            <li><a href="/configuration-reference/target.html" title="Target Configuration">Target</a></li>
+            <li><a href="/configuration-reference/task.html" title="Task Configuration">Task</a></li>
+            <li><a href="/configuration-reference/host.html" title="Host Configuration">Host</a></li>
+            <li><a href="/configuration-reference/group.html" title="Group Configuration">Group</a></li>
+            <li><a href="/configuration-reference/firewall-rule.html" title="Firewall Rule Configuration">Firewall Rule</a></li>
+            <li><a href="/configuration-reference/module.html" title="Module Configuration">Module</a></li>
+        </ul>
+    </li>
+    <li><a href="/modules.html" title="Modules">Modules - reusable Task lists</a></li>
+    <li><a href="/command-reference/index.html" title="Command Reference">Command Reference</a></li>
+    <li><a href="/command-plugins.html" title="Command Plugins">Command Plugins</a></li>
+    <li><a href="/hacking.html" title="Hacking - Contributor&apos;s Guide">Hacking</a></li>
+</ul>
+    
+        </div>
+        <div class="col-md-6">
+                        <h1>Host configuration</h1>
+<p>A Host provides Droid with the information it requires to execute commands on a
+remote Host.  At minimum, Droid requires the information needed to connect to
+an SSH service running on the Host.  This information can be provided in two
+ways: explicitly or with a reference to a local SSH client configuration.</p>
+<p>Explicitly providing the connection information might look like this:-</p>
+<pre><code class="language-yaml">hosts:
+    myhost:
+        droid_ip: "198.51.100.1"
+        username: "some_user"
+        keyfile: "/path/to/a/private/ssh/key"</code></pre>
+<p>Here we have given the host a label <code>myhost</code> by which we may refer to this Host
+throughout the project; we have given an IP address to which Droid will
+connect; we have given the name of a user account on the Host; and we have
+given the path to an SSH private key with which Droid will authenticate to
+the Host.</p>
+<p>This same information might already exist in our SSH client configuration (for
+example in <code>~/.ssh/config</code>) so instead of repeating it here, we may refer to a
+Host in the SSH client configuration by providing a matching IP address, host
+name or alias:-</p>
+<pre><code class="language-yaml">hosts:
+    myhost:
+        droid_ip: "198.51.100.1"
+    my_other_host:
+        droid_ip: "box.example.com"
+    another_host:
+       droid_ip: "an-alias"</code></pre>
+<p>In addition to the connection information, a Host can be configured with its
+own set of variables, options to pass to the SSH client and a set of firewall
+rules.</p>
+<h2><code>droid_ip</code></h2>
+<p>The <code>droid_ip</code> property of a Host provides Droid with the IP address to which
+Droid will connect in order to execute commands on the Host.  It may specify an
+IP address, a host name or an alias understood by the SSH client.</p>
+<p>It is not necessary to give a value for this property if either the <code>public_ip</code>
+or <code>private_ip</code> properties contain an IP address because Droid will use those if
+there is no value for <code>droid_ip</code>.</p>
+<h2><code>droid_port</code></h2>
+<p>The <code>droid_port</code> property of a Host is the TCP port number by which Droid will
+connect to the SSH service on the Host.  This is useful if the SSH service is
+bound to a port other than the usual SSH port 22.</p>
+<h2><code>username</code></h2>
+<p>The <code>username</code> property of a Host is the name of a user account Droid will use
+to authenticate itself to the Host.  Droid will also execute commands as this
+user on the Host.</p>
+<h2><code>keyfile</code></h2>
+<p>The <code>keyfile</code> property of a Host is a path to a private SSH key used to
+authenticate Droid to the Host.  It should be one which corresponds to a
+public key known to the Host and authorised for use in SSH authentication: that
+is, the corresponding public key is lodged in the <code>~/.ssh/authorized_keys</code> of a
+user account on the Host.</p>
+<h2><code>public_ip</code></h2>
+<p>The <code>public_ip</code> property of a Host is intended to be the publicly accessible IP
+address of the Host.  Droid will connect to the public IP address in order to
+execute commands on the Host when a value is not given for <code>droid_ip</code> or when
+Droid is instructed to connect to <code>private_ip</code> (see the <code>environment</code> directive
+in the <a href="/configuration-reference/project.html" title="Project configuration">Project Configuration</a>).</p>
+<p>The <code>public_ip</code> property is also used in the generation of firewall rules: the
+rules definitions may refer to a the <code>public_ip</code> of another Host by keyword
+instead of the actual address (see the <code>address</code> property of a <a href="/configuration-reference/firewall-rule.html" title="Firewall rule configuration">Firewall
+Rule</a>).</p>
+<h2><code>private_ip</code></h2>
+<p>The <code>private_ip</code> property of a Host is intended to be a non-public IP address
+of the Host.  Droid will connect to the private IP address in order to execute
+commands on the Host when a value is given neither for <code>droid_ip</code> nor
+<code>public_ip</code>.  Droid will connect to the private IP address also when Droid is
+instructed to do so (see the <code>environment</code> directive in the <a href="/configuration-reference/project.html" title="Project configuration">Project
+Configuration</a>).</p>
+<p>A private IP address may be particularly useful when dealing with Hosts which
+may communicate with each other over a private network, such as with many
+popular Virtual Private Server providers.</p>
+<p>The <code>private_ip</code> property is also used in the generation of firewall rules: the
+rules definitions may refer to a the <code>private_ip</code> of another Host by keyword
+instead of the actual address (see the <code>address</code> property of a <a href="/configuration-reference/firewall-rule.html" title="Firewall rule configuration">Firewall
+Rule</a>).</p>
+<h2><code>variables</code></h2>
+<p>The <code>variables</code> property of a Host is intended to provide concrete values for
+the arguments of Tasks that will execute on the Host.  The values defined here
+are merged with those defined elsewhere in the Project.  If two values have the
+same name, then the one defined here takes precedence over those defined
+elsewhere in the Project.</p>
+<h2><code>ssh_options</code></h2>
+<p>The <code>ssh_options</code> property of a Host provides Droid with options to pass to the
+SSH client when making an SSH connection to the Host.  The value is a mapping
+of option names to their values.  For example we may wish to increase the
+output from the SSH client:-</p>
+<pre><code class="language-yaml">hosts:
+    myhost:
+        ssh_options:
+            LogLevel: "VERBOSE"</code></pre>
+<p>When making a connection to a Host, Droid automatically sets some options:-</p>
+<ul>
+<li><code>IdentityFile</code>: set to the value given in the <code>keyfile</code> property of the Host</li>
+<li><code>IdentitiesOnly</code>: set to <code>yes</code></li>
+<li><code>Port</code>: set only when the <code>droid_port</code> property of the Host is set to
+something other than 22</li>
+</ul>
+<h2><code>ssh_gateway</code></h2>
+<p>The <code>ssh_gateway</code> property of a Host is used when the connection to the Host
+should be made via an SSH Gateway.  Its value is the label given to the gateway
+Host.  For example:</p>
+<pre><code class="language-yaml">hosts:
+    my_gateway:
+        droid_ip: "198.51.100.255"
+        username: "my_gw_user"
+        keyfile: "id_rsa"
+    my_host:
+        droid_ip: "198.51.100.1"
+        username: "my_user"
+        keyfile: "id_rsa"
+        ssh_gateway: "my_gateway"</code></pre>
+<p>The <code>ssh_gateway</code> property is a helpful shortcut for the <code>ProxyCommand</code> SSH
+option.  The example above could be achieved directly with:-</p>
+<pre><code class="language-yaml">hosts:
+    my_gateway:
+        droid_ip: "198.51.100.255"
+        username: "my_gw_user"
+        keyfile: "id_rsa"
+    my_host:
+        ...
+        ssh_options:
+            ProxyCommand: "ssh -o IdentityFile=id_rsa -o IdentitiesOnly=yes my_gw_user@198.51.100.255 nc %h %p"</code></pre>
+<h2><code>firewall_policy</code></h2>
+<p>The <code>firewall_policy</code> property of a Host is used by the <code>fw:generate</code> and
+<code>fw:install</code> Commands in setting-up Uncomplicated Firewall (UFW) on the Host.
+It is a mapping of UFW network traffic directions (incoming, outgoing, routed)
+to actions (allow, deny, reject) and sets the default traffic policy for the
+Host.  For example, the following policy:-</p>
+<pre><code class="language-yaml">hosts:
+    my_host:
+        firewall_policy:
+            incoming: "deny"
+            outgoing: "allow"
+            routed: "reject"</code></pre>
+<p>is transformed into the following UFW commands:-</p>
+<pre><code class="language-shell">ufw default deny incoming
+ufw default allow outgoing
+ufw default reject routed</code></pre>
+<h2><code>firewall_rules</code></h2>
+<p>The <code>firewall_rules</code> property of a Host is used by the <code>fw:generate</code> and
+<code>fw:install</code> Commands in setting-up Uncomplicated Firewall (UFW) on the Host.
+It is a list of rules.</p>
+<pre><code class="language-yaml">hosts
+    my_host:
+        firewall_rules:
+            - address: "all"
+              port: 3306
+              direction: "inbound"
+              action: "deny"</code></pre>
+<p>Please see the <a href="/configuration-reference/firewall-rule.html" title="Firewall rule configuration">Firewall Rule Configuration</a> for the configuration of
+firewall rules.</p>
+                    </div>
+        <div class="col-md-3"></div>
+    </div>
+</div>
+
+</body>
+</html>

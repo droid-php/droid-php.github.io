@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport"    content="width=device-width, initial-scale=1.0">
+	
+	<title>Droid: Task Runner for PHP</title>
+
+	<!-- Bootstrap itself -->
+	<link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+	<!-- Icons -->
+	<link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet"> 
+	<!-- Fonts -->
+	<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,700"> 
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.2.0/styles/default.min.css">
+	<!-- Custom styles -->
+	<link rel="stylesheet" href="/assets/style.css">
+    <style>
+    .header {
+        background: linear-gradient(to bottom, #405080 0%,#203040 100%) !important;
+    }
+    .navbar, .dropdown-menu, .navbar-default .navbar-nav>.open>a, .dropdown-menu>li>a {
+        margin-bottom: 0px !important;
+        background-color: #203040 !important;
+        border-radius: 0px !important;
+        border: 0px none !important;
+    }
+    .navbar, .dropdown-menu, .navbar-default .navbar-nav>.open>a, .dropdown-menu>li>a:hover {
+		color: #D87563 !important;
+	}
+
+    .navbar li a, .navbar a.navbar-brand {
+        color: #ffffff !important;
+    }
+    
+    .navbar li a.cta {
+        background-color: #80c080 !important;
+        border-radius: 5px;
+        margin-top: 9px;
+        padding: 5px;
+        color: #ffffff !important;
+    }
+    
+    /* make sidebar nav vertical */ 
+    @media (min-width: 768px) {
+      .sidebar-nav {
+          margin-top: 20px;
+          margin-bottom: 20px;
+      }
+      .sidebar-nav .navbar .navbar-collapse {
+        padding: 0;
+        max-height: none;
+      }
+      .sidebar-nav .navbar ul {
+        float: none;
+      }
+      .sidebar-nav .navbar ul:not {
+        display: block;
+      }
+      .sidebar-nav .navbar li {
+        float: none;
+        display: block;
+      }
+      .sidebar-nav .navbar li a {
+        padding-top: 12px;
+        padding-bottom: 12px;
+      }
+    }
+    </style>
+
+	<!--[if lt IE 9]> <script src="assets/js/html5shiv.js"></script> <![endif]-->
+</head>
+
+<body>
+  <!-- Static navbar -->
+  <nav class="navbar navbar-default">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="/">Droid</a>
+      </div>
+      <div id="navbar" class="navbar-collapse collapse">
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="/">Home</a></li>
+          <li class="dropdown">
+			  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Configuration <b class="caret"></b></a>
+			  <ul class="dropdown-menu">
+				  <li><a href="/droid-yml">Configuring Droid with droid.yml</a></li>
+				  <li><a href="/targets">Tasks and targets</a></li>
+				  <li><a href="/inventory">Remote tasks with inventories</a></li>
+			  </ul>
+		  </li>
+          <li><a href="/commands">Command index</a></li>
+          <li class="dropdown">
+			  <a href="#" class="dropdown-toggle cta" data-toggle="dropdown">Getting started <b class="caret"></b></a>
+			  <ul class="dropdown-menu">
+				  <li><a href="/installation">Installation</a></li>
+				  <li><a href="/using-commands">Using commands</a></li>
+				  <li><a href="/terminology">Terminology</a></li>
+			  </ul>
+		  </li>
+        </ul>
+      </div><!--/.nav-collapse -->
+    </div><!--/.container-fluid -->
+  </nav>
+<div class="container">
+    <div class="row">
+        <div class="col-md-2">
+        </div>
+        <div class="col-md-8">
+            <h1>Getting started</h1>
+<p>Cool, you are ready to try out Droid? We're sure you're going to love it.</p>
+<p>We suggest you check out the <a href="/installation">installation</a> page first.</p>
+<h2>List the available commands</h2>
+<pre><code class="language-sh">$ droid list
+Droid version 1.0.0
+
+Usage:
+  command [options] [arguments]
+
+Options:
+  -h, --help            Display this help message
+  -v|vv|vvv, --verbose  Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+Available commands:
+  config            Show project configuration
+  help              Displays help for a command
+  inventory         Show inventory configuration
+  list              Lists commands
+ bower
+  bower:install     Bower install
+ composer
+  composer:install  Composer install
+ dbtk
+  dbtk:schema-load  Load schema into database
+ debug
+  debug:echo        Echo a message to the console</code></pre>
+<p><em>shortened the output for brevity</em></p>
+<p>This commmand will list the available Droid commands. You'll notice that there are several 'global' commands, such as <code>config</code>, <code>help</code>, <code>inventory</code>, <code>list</code>, etc.</p>
+<p>Additionally, you'll find several plugin-specific commands, such as <code>composer:install</code> or <code>debug:echo</code></p>
+<h2>Learning more about the available commands</h2>
+<p>To learn more about these commands, use the <code>--help</code> flag:</p>
+<pre><code class="language-sh">$ droid debug:echo --help
+Usage:
+  debug:echo [options] [--] &lt;message&gt;
+
+Arguments:
+  message               Message to output
+
+Options:
+  -c, --color=COLOR     Set color of the output
+  -u, --uppercase       Uppercase the output
+Help:
+ Echo a message to the console</code></pre>
+<p>You'll find that the <code>debug:echo</code> command takes a <code>message</code> argument, and optionally a color and uppercase flag.</p>
+<h2>Running commands</h2>
+<p>You can call this command like this:</p>
+<pre><code class="language-sh">$ droid debug:echo "hello world"
+hello world
+$ droid debug:echo "hello world" -u
+HELLO WORLD</code></pre>
+                                </div>
+        <div class="col-md-2">
+        </div>
+    </div>
+</div>
+
+
+<footer id="footer" class="jumbotron">
+	<section class="container">
+		<div class="row">
+				<div class="col-md-5 col-md-push-1">
+										<a class="addthis_button_github" href="http://github.com/droid-php" target="_blank"></a>
+				</div>
+				<div class="col-md-5 col-md-push-1">
+					<h2>Droid is open-source</h2>
+					<p>You can use Droid in your projects and for your server configuration management for free.
+                    You can easily extend it's functionality through plugins, and use plugins of others.</p>
+					<p>For further details, check out <a href="https://github.com/droid-php/">github.com/droid-php</a></p>
+				</div>
+		</div>	
+	</section>
+</footer>
+
+<p class="small text-muted text-center">Copyright &copy; 2016, <a target="_blank" href="http://www.linkorb.com/">LinkORB</a>. Powered by <a target="_blank" href="http://github.com/linkorb/blazon">Blazon static site generator</a></p>
+<br>
+
+<!-- JavaScript libs are placed at the end of the document so the pages load faster -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.2.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script src="/assets/script.js"></script>
+
+</body>
+</html>

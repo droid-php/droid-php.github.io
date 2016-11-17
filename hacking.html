@@ -1,0 +1,175 @@
+<html>
+<head>
+<title>Hacking - Droid PHP</title>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/flatly/bootstrap.min.css" rel="stylesheet" integrity="sha384-+ENW/yibaokMnme+vBLnHMphUYxHs34h9lpdbSLuAwGkOKFRl4C34WkjazBtb7eT" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/styles/monokai.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/languages/yaml.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/languages/php.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body>
+    <div class="container-fluid">
+    <div class="row">
+        <div class="col-md-3">
+            <h1>Navigation</h1>
+
+<ul>
+    <li><a href="/index.html">Home</a></li>
+    <li><a href="/getting-started.html">Getting started</a></li>
+    <li><a href="/task-arguments-and-variables.html" title="Task Arguments and Variables">Task Arguments and Variables</a></li>
+    <li><a href="/enable-remote-command-execution.html" title="Enable Remote Command Execution">Enable remote command execution</a></li>
+    <li><a href="/configuration-reference/index.html" title="Configuration Reference">Configuration reference</a>
+        <ul>
+            <li><a href="/configuration-reference/project.html" title="Project Configuration">Project</a></li>
+            <li><a href="/configuration-reference/target.html" title="Target Configuration">Target</a></li>
+            <li><a href="/configuration-reference/task.html" title="Task Configuration">Task</a></li>
+            <li><a href="/configuration-reference/host.html" title="Host Configuration">Host</a></li>
+            <li><a href="/configuration-reference/group.html" title="Group Configuration">Group</a></li>
+            <li><a href="/configuration-reference/firewall-rule.html" title="Firewall Rule Configuration">Firewall Rule</a></li>
+            <li><a href="/configuration-reference/module.html" title="Module Configuration">Module</a></li>
+        </ul>
+    </li>
+    <li><a href="/modules.html" title="Modules">Modules - reusable Task lists</a></li>
+    <li><a href="/command-reference/index.html" title="Command Reference">Command Reference</a></li>
+    <li><a href="/command-plugins.html" title="Command Plugins">Command Plugins</a></li>
+    <li><a href="/hacking.html" title="Hacking - Contributor&apos;s Guide">Hacking</a></li>
+</ul>
+    
+        </div>
+        <div class="col-md-6">
+                        <h1>Hacking</h1>
+<p>A short guide to contributing to the Droid PHP project.</p>
+<h2>Droid repositories</h2>
+<p>Droid comprises a number of packages.  Development takes place in a number of
+git repositories, hosted at GitHub.</p>
+<ul>
+<li><a href="https://github.com/droid-php/droid" title="Droid">droid/droid</a> - The main Droid application.</li>
+<li><a href="https://github.com/droid-php/droid-model" title="Droid Model">droid/droid-model</a> - Classes modelling Targets, Tasks, Hosts,
+Groups, etc.</li>
+<li><a href="https://github.com/droid-php/droid-libcommand" title="Droid libcommand">droid/droid-libcommand</a> - A small number of helpers for
+Droid Command Plugins.</li>
+<li><a href="https://github.com/droid-php" title="All Droid repositories">droid/droid-*</a> - Droid Command Plugins.</li>
+<li><a href="https://github.com/droid-php?query=droid-module" title="Droid Modules">droid/droid-module-*</a> - Droid Modules.</li>
+<li><a href="https://github.com/droid-php/droid-standard" title="Droid Standard">droid/droid-standard</a> - A meta package providing a standard
+set of Droid Command Plugins.</li>
+<li><a href="https://github.com/droid-php/droid-doc" title="Droid Documentation">droid/droid-doc</a> - Documentation.</li>
+</ul>
+<h2>Report a bug</h2>
+<p>Please consider reporting problems and defects in any of the Droid packages.
+First, identify the repository corresponding to the defective package and
+search the &quot;Issues&quot; to see if the particular problem has already been reported.
+If an an existing Issue already covers the problem, please add any further
+information that will help with diagnosis or correction.</p>
+<p>When an existing Issue cannot be found for a particular problem, please create
+a new one and observe the following recommendations:-</p>
+<ul>
+<li>Provide a concise, descriptive Issue Title.</li>
+<li>Describe the behaviour observed, including any relevant output, and how it
+differs from what was expected.</li>
+<li>Provide information that someone else can use to reproduce the problematic
+behaviour; this can be a list of steps to take or better, a test case.</li>
+<li>Provide details about the version of PHP being used locally and, where
+applicable, on remote Hosts.</li>
+<li>Provide the output of <code>composer show droid\*</code> and <code>composer show symfony\*</code>.</li>
+</ul>
+<p>A patch to fix a defect is welcome; please see the next section for guidance on
+patch submissions.</p>
+<h2>Submit a patch</h2>
+<p>Making a Pull Request (see below) to provide a fix for a bug is preferred, but
+a patch is always welcome too.  Attach a patch to an existing Issue if one
+already describes the problem addressed by the patch; otherwise, please create
+a new Issue (see above) and attach the patch to it.</p>
+<p>To create a patch:-</p>
+<ul>
+<li>
+<p>Clone the relevant repository, using <code>git clone</code>, for example:-</p>
+<pre><code class="language-shell">$ git clone https://github.com/droid-php/droid.git</code></pre>
+</li>
+<li>
+<p>Install any dependencies, including those meant for use during development,
+using <code>composer install</code>, for example:-</p>
+<pre><code class="language-shell">$ cd droid &amp;&amp; composer install</code></pre>
+</li>
+<li>
+<p>Make the necessary fix. Please follow the recommendations of the
+<a href="http://www.php-fig.org/psr/psr-2/" title="PSR-2: Coding Style Guide">PSR-2 code style guide</a>.</p>
+</li>
+<li>
+<p>Run the PHPUnit test suite to ensure that the change doesn't introduce a
+further bug:-</p>
+<pre><code class="language-shell">$ cd droid &amp;&amp; phpunit</code></pre>
+</li>
+<li>
+<p>Create the patch, for example:</p>
+<pre><code class="language-shell">$ git diff &gt; fix-something.patch</code></pre>
+<p>or, when the change involves adding or removing files:-</p>
+<pre><code class="language-shell">$ git add &lt;files&gt; # and/or git rm &lt;files&gt;
+$ git diff --cached &gt; fix-something.patch</code></pre>
+</li>
+<li>Attach the patch to an Issue comment which describes the changes introduced</li>
+</ul>
+<h2>Submit a Pull Request</h2>
+<p>Submitting a Pull Request (PR) is the best way to contribute a bug fix or
+feature.  To obtain the code and work on the fix or feature:-</p>
+<ul>
+<li>
+<p>Head to GitHub and fork the relevant repository and clone the fork:-</p>
+<pre><code class="language-shell">$ git clone git@github.com:myname/droid</code></pre>
+</li>
+<li>
+<p>Track the relevant repository by adding a <a href="https://git-scm.com/docs/git-remote" title="Git - git-remote Documentation">git-remote</a>, for example, to
+refer to the repository as &quot;upstream&quot;:-</p>
+<pre><code class="language-shell">$ cd droid &amp;&amp; git remote add upstream git@github.com:droid-php/droid</code></pre>
+</li>
+<li>
+<p>Create a topic branch on which to work on the fix or feature:-</p>
+<pre><code class="language-shell">$ git checkout -b fix_something</code></pre>
+</li>
+<li>
+<p>Install any dependencies, including those meant for use during development,
+using <code>composer install</code>:-</p>
+<pre><code class="language-shell">$ composer install</code></pre>
+</li>
+<li>
+<p>Run the test suite:-</p>
+<pre><code class="language-shell">$ phpunit</code></pre>
+</li>
+<li>
+<p>Work on the fix or feature, adding unit tests and integration tests as
+appropriate.</p>
+</li>
+<li>
+<p>Run the test suite and resolve any differences from the previous test result.</p>
+</li>
+<li>
+<p>Commit the fix or feature.  Please try to keep the scope of each commit as
+focused as possible and provide a commit message that includes sufficient
+detail that someone else will understand the change introduced.</p>
+</li>
+<li>
+<p>Fetch and integrate any changes from the official repository before pushing
+changes back to the forked repository:-</p>
+<pre><code class="language-shell">$ git checkout master
+$ git fetch upstream master
+$ git merge --ff-only upstream/master
+$ git checkout fix_something
+$ git rebase master</code></pre>
+</li>
+<li>
+<p>Push to the forked repository:-</p>
+<pre><code class="language-shell">$ git push origin/fix_something</code></pre>
+</li>
+<li>Head to GitHub and open a PR against the master branch of the official
+repository.</li>
+</ul>
+<p>Happy Hacking!</p>
+                    </div>
+        <div class="col-md-3"></div>
+    </div>
+</div>
+
+</body>
+</html>

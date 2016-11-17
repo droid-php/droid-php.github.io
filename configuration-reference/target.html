@@ -1,0 +1,138 @@
+<html>
+<head>
+<title>Target Configuration - Droid PHP</title>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/flatly/bootstrap.min.css" rel="stylesheet" integrity="sha384-+ENW/yibaokMnme+vBLnHMphUYxHs34h9lpdbSLuAwGkOKFRl4C34WkjazBtb7eT" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/styles/monokai.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/languages/yaml.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/languages/php.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body>
+    <div class="container-fluid">
+    <div class="row">
+        <div class="col-md-3">
+            <h1>Navigation</h1>
+
+<ul>
+    <li><a href="/index.html">Home</a></li>
+    <li><a href="/getting-started.html">Getting started</a></li>
+    <li><a href="/task-arguments-and-variables.html" title="Task Arguments and Variables">Task Arguments and Variables</a></li>
+    <li><a href="/enable-remote-command-execution.html" title="Enable Remote Command Execution">Enable remote command execution</a></li>
+    <li><a href="/configuration-reference/index.html" title="Configuration Reference">Configuration reference</a>
+        <ul>
+            <li><a href="/configuration-reference/project.html" title="Project Configuration">Project</a></li>
+            <li><a href="/configuration-reference/target.html" title="Target Configuration">Target</a></li>
+            <li><a href="/configuration-reference/task.html" title="Task Configuration">Task</a></li>
+            <li><a href="/configuration-reference/host.html" title="Host Configuration">Host</a></li>
+            <li><a href="/configuration-reference/group.html" title="Group Configuration">Group</a></li>
+            <li><a href="/configuration-reference/firewall-rule.html" title="Firewall Rule Configuration">Firewall Rule</a></li>
+            <li><a href="/configuration-reference/module.html" title="Module Configuration">Module</a></li>
+        </ul>
+    </li>
+    <li><a href="/modules.html" title="Modules">Modules - reusable Task lists</a></li>
+    <li><a href="/command-reference/index.html" title="Command Reference">Command Reference</a></li>
+    <li><a href="/command-plugins.html" title="Command Plugins">Command Plugins</a></li>
+    <li><a href="/hacking.html" title="Hacking - Contributor&apos;s Guide">Hacking</a></li>
+</ul>
+    
+        </div>
+        <div class="col-md-6">
+                        <h1>Target configuration</h1>
+<p>A Target is like a recipe: it defines a number of steps that Droid will take to
+achieve a desired outcome.</p>
+<p>The steps of a Target may be a list of Tasks or a list Modules (which are
+themselves reusable lists of Tasks) or a mixture of both.  The Tasks of Modules
+are always executed before the Tasks of the Target.</p>
+<p>A Target may be executed on the local machine or on one or more remote Hosts.
+The decision to execute locally or remotely and the selection of remote Hosts
+may be declared as part of the Target or as part of individual Tasks.</p>
+<h2><code>tasks</code></h2>
+<p>This <code>tasks</code> property of a Target is a list of Tasks which will be executed in
+the order of their definition.</p>
+<pre><code class="language-yaml">target:
+    make_website:
+        tasks:
+            - name: "Install Apache"
+              ...
+            - name: "Configure Apache"
+              ...</code></pre>
+<p>Please see the <a href="/configuration-reference/task.html" title="Task configuration">Task Configuration</a> for the configuration of a Task.</p>
+<h2><code>hosts</code></h2>
+<p>The <code>hosts</code> property of a Target is an expression which identifies the Hosts
+and Groups of Hosts on which the Target is to be executed.  The expression may
+be a single name or a space or comma separated list of names.  The names must
+match those declared in the Project, under the <code>hosts</code> and <code>groups</code> directives.</p>
+<pre><code class="language-yaml">target:
+    setup_firewalls:
+        hosts: "webservers db.example.com"
+        tasks:
+            - ...
+            - ...</code></pre>
+<p>A Task may declare that it is to execute on some a subset of the Hosts
+identified here, or even on a completely different set of Hosts (see
+<code>host_filter</code> and <code>hosts</code> of the <a href="/configuration-reference/task.html" title="Task configuration">Task Configuration</a>).</p>
+<h2><code>modules</code></h2>
+<p>The <code>modules</code> property of a Target is a list of Module names.  The Tasks of
+each of the specified Modules will be executed before those in <code>tasks</code> list.
+Modules are executed in the order in which they are declared here.</p>
+<pre><code class="language-yaml">target:
+    make_webservers:
+        modules:
+            - "install-apache"
+            - "apache-vhost"</code></pre>
+<p>The names of Modules must match those declared in the main <code>modules</code> directive
+(see <a href="/configuration-reference/project.html" title="Project configuration">Project Configuration</a>).</p>
+<h2><code>triggers</code></h2>
+<p>The <code>triggers</code> property of a Target is a list of Tasks whose execution depends
+upon the outcome of the execution of other Tasks.  A Task can trigger the
+execution of another Task when its Command is able to report whether or not it
+made a change.  For example, a Task which modifies the configuration of a
+system service may cause the service to reload its configuration:-</p>
+<pre><code class="language-yaml">target:
+    make_website:
+        triggers:
+            - name: "Reload Apache"
+              command: "service:reload"
+              arguments: {name: "apache2"}
+        tasks:
+            - name: "Enable Apache module"
+              command: "apache:enmod"
+              arguments: {module-name: ...}
+              trigger: "Reload Apache"</code></pre>
+<p>A Task is triggered only when such a Command reports that a change was made.</p>
+<p>Apart from its conditional execution, a <code>triggers</code> Task is no different from a
+<code>tasks</code> Task.  Please see the <a href="/configuration-reference/task.html" title="Task configuration">Task Configuration</a> for the
+configuration of a Task.</p>
+<h2><code>variables</code></h2>
+<p>The <code>variables</code> property of a Target is intended to provide concrete values for
+the Command arguments of the Target's Tasks.  For example, we might define the
+name of a user account for use by a number of Tasks:-</p>
+<pre><code class="language-yaml">targets:
+    make_website:
+        variables:
+            owner_username: "devops-one"
+            docroot: ...
+        tasks:
+            - name: "Create owner user account"
+              command: "user:create"
+              arguments:
+                  username: "{{ owner_username }}"
+            - name: "Own the docroot"
+              command: "fs:chown"
+              arguments:
+                 file: "{{ docroot }}"
+                 user: "{{ owner_username }}"
+                 group: "nobody"</code></pre>
+<p>Variables declared here can augment and override values declared in the main
+<code>variables</code> directive (see <a href="/configuration-reference/project.html" title="Project configuration">Project Configuration</a>) and those
+declared in Modules (see <a href="/configuration-reference/module.html" title="Module configuration">Module Configuration</a>).</p>
+                    </div>
+        <div class="col-md-3"></div>
+    </div>
+</div>
+
+</body>
+</html>

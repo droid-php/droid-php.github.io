@@ -1,0 +1,111 @@
+<html>
+<head>
+<title>Group Configuration - Droid PHP</title>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/flatly/bootstrap.min.css" rel="stylesheet" integrity="sha384-+ENW/yibaokMnme+vBLnHMphUYxHs34h9lpdbSLuAwGkOKFRl4C34WkjazBtb7eT" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/styles/monokai.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/languages/yaml.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/languages/php.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body>
+    <div class="container-fluid">
+    <div class="row">
+        <div class="col-md-3">
+            <h1>Navigation</h1>
+
+<ul>
+    <li><a href="/index.html">Home</a></li>
+    <li><a href="/getting-started.html">Getting started</a></li>
+    <li><a href="/task-arguments-and-variables.html" title="Task Arguments and Variables">Task Arguments and Variables</a></li>
+    <li><a href="/enable-remote-command-execution.html" title="Enable Remote Command Execution">Enable remote command execution</a></li>
+    <li><a href="/configuration-reference/index.html" title="Configuration Reference">Configuration reference</a>
+        <ul>
+            <li><a href="/configuration-reference/project.html" title="Project Configuration">Project</a></li>
+            <li><a href="/configuration-reference/target.html" title="Target Configuration">Target</a></li>
+            <li><a href="/configuration-reference/task.html" title="Task Configuration">Task</a></li>
+            <li><a href="/configuration-reference/host.html" title="Host Configuration">Host</a></li>
+            <li><a href="/configuration-reference/group.html" title="Group Configuration">Group</a></li>
+            <li><a href="/configuration-reference/firewall-rule.html" title="Firewall Rule Configuration">Firewall Rule</a></li>
+            <li><a href="/configuration-reference/module.html" title="Module Configuration">Module</a></li>
+        </ul>
+    </li>
+    <li><a href="/modules.html" title="Modules">Modules - reusable Task lists</a></li>
+    <li><a href="/command-reference/index.html" title="Command Reference">Command Reference</a></li>
+    <li><a href="/command-plugins.html" title="Command Plugins">Command Plugins</a></li>
+    <li><a href="/hacking.html" title="Hacking - Contributor&apos;s Guide">Hacking</a></li>
+</ul>
+    
+        </div>
+        <div class="col-md-6">
+                        <h1>Group configuration</h1>
+<p>A Group is intended to allow Hosts to be grouped into logical units, such as
+&quot;web_servers&quot;.  Tasks can be performed on all members of a Group by referring
+to the Group name.</p>
+<p>A Group also allows variables and firewall rules and policy to be applied to
+all members of the Group.</p>
+<h2><code>hosts</code></h2>
+<p>The <code>hosts</code> property of a Group defines the members of the Group.  It is a list
+of names, each corresponding to a Host defined in the <code>hosts</code> directive of a
+Droid Project (see <a href="/configuration-reference/project.html" title="Project configuration">Project Configuration</a>).  For example, a set
+of web servers might be defined as a Group named &quot;web_servers&quot;:-</p>
+<pre><code class="language-yaml">groups:
+    web_servers:
+        hosts:
+            - "web-01"
+            - "web-02"
+hosts:
+    web-01:
+        public_ip: "198.51.100.1"
+        ...
+    web-02:
+        ...</code></pre>
+<h2><code>variables</code></h2>
+<p>The <code>variables</code> property of a Group is intended to provide concrete values for
+the arguments of Tasks.  The values defined here apply to all members of the
+Group and are merged with those defined elsewhere in the Project.  Each Host
+may additionally define their own variable values to augment or override those
+defined here.</p>
+<h2><code>firewall_policy</code></h2>
+<p>The <code>firewall_policy</code> property of a Group is used by the <code>fw:generate</code> and
+<code>fw:install</code> Commands in setting-up Uncomplicated Firewall (UFW) on the members
+of the Group.  It is a mapping of UFW network traffic directions (incoming,
+outgoing, routed) to actions (allow, deny, reject) and sets the default traffic
+policy for the Hosts in the Group.  For example, the following policy:-</p>
+<pre><code class="language-yaml">groups:
+    my_group:
+        firewall_policy:
+            incoming: "deny"
+            outgoing: "allow"
+            routed: "reject"</code></pre>
+<p>is transformed into the following UFW commands for execution on each of the
+Hosts:-</p>
+<pre><code class="language-shell">ufw default deny incoming
+ufw default allow outgoing
+ufw default reject routed</code></pre>
+<p>Each Host in the Group may augment or override the policy defined here by
+giving a value for the <code>firewall_policy</code> of the Host.</p>
+<h2><code>firewall_rules</code></h2>
+<p>The <code>firewall_rules</code> property of a Group is used by the <code>fw:generate</code> and
+<code>fw:install</code> Commands in setting-up Uncomplicated Firewall (UFW) on the members
+of the Group.  It is a list of rules.</p>
+<pre><code class="language-yaml">groups
+    my_group:
+        firewall_rules:
+            - address: "all"
+              port: 3306
+              direction: "inbound"
+              action: "deny"</code></pre>
+<p>Each member of the Group may define their own rules to augment those defined
+here.</p>
+<p>Please see the <a href="/configuration-reference/firewall-rule.html" title="Firewall rule configuration">Firewall Rule Configuration</a> for the configuration of
+firewall rules.</p>
+                    </div>
+        <div class="col-md-3"></div>
+    </div>
+</div>
+
+</body>
+</html>
